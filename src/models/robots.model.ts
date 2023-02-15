@@ -32,7 +32,7 @@ export const getRobotById = (
   result: (err: any, data: Robot[]) => any
 ) => {
   sql.query(
-    "SELECT * FROM robots WHERE id = ?",
+    "SELECT * FROM robots WHERE robotId = ?",
     robotId,
     (err: any, res: any) => {
       if (err) {

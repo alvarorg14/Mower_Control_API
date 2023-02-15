@@ -34,7 +34,7 @@ CREATE TABLE mowercontrol.robots (
 	modelId varchar(100) NOT NULL,
 	clientId varchar(100) NOT NULL,
 	CONSTRAINT robots_pk PRIMARY KEY (robotId),
-	CONSTRAINT robots_un UNIQUE KEY (serialNumber)
+	CONSTRAINT robots_un UNIQUE KEY (serialNumber),
     CONSTRAINT robots_models_FK FOREIGN KEY (modelId) REFERENCES mowercontrol.models(modelId),
     CONSTRAINT robots_clients_FK FOREIGN KEY (clientId) REFERENCES mowercontrol.clients(clientId)
 )

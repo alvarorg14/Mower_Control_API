@@ -47,24 +47,32 @@ export const getModelByName: RequestHandler = async (req, res) => {
 
 //Create a new model
 export const createModel: RequestHandler = async (req, res) => {
-  const newModel: Model = {
+  //Validate model
+  const modelToValidate: Model = {
     name: req.body.name,
     surface: req.body.surface,
     maxHours: req.body.maxHours,
   };
 
-  //Validate model
-  let { error } = sql.validateModel(newModel);
+  let { error } = sql.validateModel(modelToValidate);
 
   if (error) {
     res.status(400).send(error.details[0].message);
     return;
   }
 
+  const newModel = modelToValidate;
+
   sql.createModel(newModel, (err: any, data: Model) => {
     if (err) {
       console.log(err);
-      res.status(500).send("Some error occurred while creating the Model.");
+      if (err.code === "ER_DUP_ENTRY") {
+        res
+          .status(409)
+          .send("Model with name " + newModel.name + " already exists.");
+      } else {
+        res.status(500).send("Some error occurred while creating the Model.");
+      }
     } else {
       res.send(data);
     }
@@ -73,25 +81,33 @@ export const createModel: RequestHandler = async (req, res) => {
 
 //Update a model
 export const updateModel: RequestHandler = async (req, res) => {
-  const model: Model = {
-    modelId: req.params.id,
+  //Validate model
+  const modelToValidate: Model = {
     name: req.body.name,
     surface: req.body.surface,
     maxHours: req.body.maxHours,
   };
 
-  //Validate model
-  let { error } = sql.validateModel(model);
+  let { error } = sql.validateModel(modelToValidate);
 
   if (error) {
     res.status(400).send(error.details[0].message);
     return;
   }
 
+  const model = modelToValidate;
+  model.modelId = req.params.id;
+
   sql.updateModel(req.params.id, model, (err: any, data: Model) => {
     if (err) {
       console.log(err);
-      res.status(500).send("Some error occurred while updating the Model.");
+      if (err.code === "ER_DUP_ENTRY") {
+        res
+          .status(409)
+          .send("Model with name " + model.name + " already exists.");
+      } else {
+        res.status(500).send("Some error occurred while creating the Model.");
+      }
     } else {
       res.send(data);
     }

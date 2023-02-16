@@ -31,11 +31,21 @@ export const getClientById: RequestHandler = async (req, res) => {
 
 //Create a new client
 export const createClient: RequestHandler = async (req, res) => {
-  const newClient: Client = {
+  //Validate client
+  const clientToValidate: Client = {
     name: req.body.name,
     address: req.body.address,
     phoneNumber: req.body.phoneNumber,
   };
+
+  let { error } = sql.validateClient(clientToValidate);
+
+  if (error) {
+    res.status(400).send(error.details[0].message);
+    return;
+  }
+
+  const newClient = clientToValidate;
 
   sql.createClient(newClient, (err: any, data: Client) => {
     if (err) {
@@ -49,12 +59,22 @@ export const createClient: RequestHandler = async (req, res) => {
 
 //Update a client
 export const updateClient: RequestHandler = async (req, res) => {
-  const client: Client = {
-    clientId: req.params.id,
+  //Validate client
+  const clientToValidate: Client = {
     name: req.body.name,
     address: req.body.address,
     phoneNumber: req.body.phoneNumber,
   };
+
+  let { error } = sql.validateClient(clientToValidate);
+
+  if (error) {
+    res.status(400).send(error.details[0].message);
+    return;
+  }
+
+  const client = clientToValidate;
+  client.clientId = req.params.id;
 
   sql.updateClient(req.params.id, client, (err: any, data: Client) => {
     if (err) {

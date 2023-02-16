@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import Joi from "joi";
 
 const sql = require("../db/db.ts");
 
@@ -88,4 +89,14 @@ export const deleteClient = (
       result(null, res);
     }
   );
+};
+
+//Validate a client
+export const validateClient = (client: Client) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(30).required(),
+    address: Joi.string().min(3).max(50).required(),
+    phoneNumber: Joi.number().min(9).max(9).required(),
+  });
+  return schema.validate(client);
 };

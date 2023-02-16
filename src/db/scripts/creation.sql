@@ -15,7 +15,8 @@ CREATE TABLE mowercontrol.models (
 	name varchar(100) NOT NULL,
 	surface INT NOT NULL,
 	maxHours INT NOT NULL,
-	CONSTRAINT models_pk PRIMARY KEY (modelId)
+	CONSTRAINT models_pk PRIMARY KEY (modelId),
+	CONSTRAINT models_un UNIQUE KEY (name)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4

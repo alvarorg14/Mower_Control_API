@@ -48,23 +48,15 @@ export const getRepairsByRobotId: RequestHandler = (req, res) => {
 //Create a repair
 export const createRepair: RequestHandler = (req, res) => {
   //Validate request
-  if (!req.body) {
+  let newRepair = validateBody(req);
+  if (newRepair === null) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
     return;
   }
 
-  //Create a repair
-  const repairToValidate: Repair = {
-    title: req.body.title,
-    description: req.body.description,
-    workingHours: req.body.workingHours,
-    date: new Date(req.body.date),
-    robotId: req.body.robotId,
-  };
-
-  let { error } = sql.validateRepair(repairToValidate);
+  let { error } = sql.validateRepair(newRepair);
 
   if (error) {
     res.status(400).send(error.details[0].message);
@@ -72,7 +64,7 @@ export const createRepair: RequestHandler = (req, res) => {
   }
 
   //Save repair in the database
-  sql.createRepair(repairToValidate, (err, data) => {
+  sql.createRepair(newRepair, (err, data) => {
     if (err) {
       if (err.code === "ER_NO_REFERENCED_ROW_2") {
         res.status(400).send({ message: "Robot does not exist" });
@@ -88,29 +80,22 @@ export const createRepair: RequestHandler = (req, res) => {
 //Update a repair
 export const updateRepair: RequestHandler = (req, res) => {
   //Validate request
-  if (!req.body) {
+  let newRepair = validateBody(req);
+  if (newRepair === null) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
     return;
   }
 
-  const repairToValidate: Repair = {
-    title: req.body.title,
-    description: req.body.description,
-    workingHours: req.body.workingHours,
-    date: new Date(req.body.date),
-    robotId: req.body.robotId,
-  };
-
-  let { error } = sql.validateRepair(repairToValidate);
+  let { error } = sql.validateRepair(newRepair);
 
   if (error) {
     res.status(400).send(error.details[0].message);
     return;
   }
 
-  sql.updateRepair(req.params.id, repairToValidate, (err, data) => {
+  sql.updateRepair(req.params.id, newRepair, (err, data) => {
     if (err) {
       if (err.code === "ER_NO_REFERENCED_ROW_2") {
         res.status(400).send({ message: "Robot does not exist" });
@@ -121,6 +106,22 @@ export const updateRepair: RequestHandler = (req, res) => {
       res.send(data);
     }
   });
+};
+
+export const validateBody: any = (req: any) => {
+  if (!req.body) {
+    return null;
+  }
+
+  let repairToValidate: Repair = {
+    title: req.body.title,
+    description: req.body.description,
+    workingHours: req.body.workingHours,
+    date: new Date(req.body.date),
+    robotId: req.body.robotId,
+  };
+
+  return repairToValidate;
 };
 
 //Delete a repair

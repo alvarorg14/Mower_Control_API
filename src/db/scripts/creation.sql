@@ -71,11 +71,13 @@ COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE mowercontrol.parts (
 	partId varchar(100) NOT NULL,
+	reference varchar(100) NOT NULL,
 	name varchar(100) NOT NULL,
 	description varchar(100) NOT NULL,
 	stock INT NOT NULL,
 	price DOUBLE NOT NULL,
-	CONSTRAINT parts_pk PRIMARY KEY (partId)
+	CONSTRAINT parts_pk PRIMARY KEY (partId),
+	CONSTRAINT parts_un UNIQUE KEY (reference)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4

@@ -89,7 +89,7 @@ CREATE TABLE mowercontrol.repairs (
 	title varchar(100) NOT NULL,
 	description varchar(500) NOT NULL,
 	workingHours INT NOT NULL,
-	`date` DATE NOT NULL,
+	`date` DATETIME NOT NULL,
 	robotId varchar(100) NOT NULL,
 	CONSTRAINT repairs_pk PRIMARY KEY (repairId),
 	CONSTRAINT repairs_FK FOREIGN KEY (robotId) REFERENCES mowercontrol.robots(robotId)

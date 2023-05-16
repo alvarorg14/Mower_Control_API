@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import Joi from "joi";
-
-const sql = require("../db/db.ts");
+import { execute } from "../db/db";
+import NotFoundError from "../errors/notFound.error";
 
 //Repair model
 export type Repair = {
@@ -14,109 +14,44 @@ export type Repair = {
 };
 
 //Get all repairs
-export const getAllRepairs = (result: (err: any, data: Repair[]) => any) => {
-  sql.query("SELECT * FROM repairs", (err: any, res: any) => {
-    if (err) {
-      result(err, []);
-      return;
-    }
-    result(null, res);
-  });
+export const getAllRepairs = async (): Promise<Repair[]> => {
+  const query = "SELECT * FROM repairs";
+  const results = await execute<Repair[]>(query, []);
+  return results;
 };
 
 //Get a repair by id
-export const getRepairById = (
-  repairId: string,
-  result: (err: any, data: Repair) => any
-) => {
-  sql.query(
-    "SELECT * FROM repairs WHERE repairId = ?",
-    repairId,
-    (err: any, res: any) => {
-      if (err) {
-        result(err, null as any);
-        return;
-      }
-      result(null, res[0]);
-    }
-  );
+export const getRepairById = async (repairId: string): Promise<Repair> => {
+  const query = "SELECT * FROM repairs WHERE repairId = ?";
+  const results = await execute<Repair[]>(query, [repairId]);
+  if (results.length === 0) throw new NotFoundError("Repair not found");
+  return results[0];
 };
 
 //Get repairs by robotId
-export const getRepairsByRobotId = (
-  robotId: string,
-  result: (err: any, data: Repair[]) => any
-) => {
-  sql.query(
-    "SELECT * FROM repairs WHERE robotId = ?",
-    robotId,
-    (err: any, res: any) => {
-      if (err) {
-        result(err, null as any);
-        return;
-      }
-      result(null, res);
-    }
-  );
+export const getRepairsByRobotId = async (robotId: string): Promise<Repair[]> => {
+  const query = "SELECT * FROM repairs WHERE robotId = ?";
+  const results = await execute<Repair[]>(query, [robotId]);
+  return results;
 };
 
 //Create a repair
-export const createRepair = (
-  newRepair: Repair,
-  result: (err: any, data: Repair) => any
-) => {
+export const createRepair = async (newRepair: Repair): Promise<Repair> => {
   newRepair.repairId = uuidv4();
-  sql.query("INSERT INTO repairs SET ?", newRepair, (err: any, res: any) => {
-    if (err) {
-      result(err, null as any);
-      return;
-    }
-    result(null, newRepair);
-  });
+  const query = "INSERT INTO repairs SET ?";
+  await execute(query, [newRepair]);
+  return newRepair;
 };
 
-//Update a repair
-export const updateRepair = (
-  repairId: string,
-  repair: Repair,
-  result: (err: any, data: Repair) => any
-) => {
-  sql.query(
-    "UPDATE repairs SET title = ?, description = ?, workingHours = ?, date = ?, robotId = ? WHERE repairId = ?",
-    [
-      repair.title,
-      repair.description,
-      repair.workingHours,
-      repair.date,
-      repair.robotId,
-      repairId,
-    ],
-    (err: any, res: any) => {
-      if (err) {
-        result(err, null as any);
-        return;
-      }
-      result(null, repair);
-    }
-  );
+export const updateRepair = async (repairId: string, repair: Repair): Promise<Repair> => {
+  const query = "UPDATE repairs SET title = ?, description = ?, workingHours = ?, date = ?, robotId = ? WHERE repairId = ?";
+  await execute(query, [repair.title, repair.description, repair.workingHours, repair.date, repair.robotId, repairId]);
+  return repair;
 };
 
-//Delete a repair
-export const deleteRepair = (
-  repairId: string,
-  result: (err: any, data: Repair) => any
-) => {
-  sql.query(
-    "DELETE FROM repairs WHERE repairId = ?",
-    repairId,
-    (err: any, res: any) => {
-      if (err) {
-        result(err, null as any);
-        return;
-      }
-      result(null, res);
-    }
-  );
+export const deleteRepair = async (repairId: string): Promise<void> => {
+  const query = "DELETE FROM repairs WHERE repairId = ?";
+  await execute(query, [repairId]);
 };
 
 //Validate a repair

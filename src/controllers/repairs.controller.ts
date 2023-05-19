@@ -8,7 +8,7 @@ import ValidationError from "../errors/validation.error";
 export const getAllRepairs: RequestHandler = async (req, res) => {
   try {
     const repairs = await repairsRepository.getAll();
-    res.status(200).send(repairs);
+    res.status(200).json(repairs);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -18,7 +18,7 @@ export const getAllRepairs: RequestHandler = async (req, res) => {
 export const getRepairById: RequestHandler = async (req, res) => {
   try {
     const repairs = await repairsRepository.getById(req.params.id);
-    res.status(200).send(repairs);
+    res.status(200).json(repairs);
   } catch (err) {
     if (err instanceof NotFoundError) {
       res.status(404).send(err.message);
@@ -32,7 +32,7 @@ export const getRepairById: RequestHandler = async (req, res) => {
 export const getRepairsByRobotId: RequestHandler = async (req, res) => {
   try {
     const repairs = await repairsRepository.getByRobotId(req.params.robotId);
-    res.status(200).send(repairs);
+    res.status(200).json(repairs);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -50,7 +50,7 @@ export const createRepair: RequestHandler = async (req, res) => {
   try {
     validateRepair(newRepair);
     const repair = await repairsRepository.create(newRepair);
-    res.status(201).send(repair);
+    res.status(201).json(repair);
   } catch (err) {
     if (err instanceof ValidationError) {
       res.status(400).send(err.message);
@@ -75,7 +75,7 @@ export const updateRepair: RequestHandler = async (req, res) => {
     validateRepair(newRepair);
     newRepair.repairId = req.params.id;
     const repair = await repairsRepository.update(req.params.id, newRepair);
-    res.status(200).send(repair);
+    res.status(200).json(repair);
   } catch (err) {
     if (err instanceof ValidationError) {
       res.status(400).send(err.message);
@@ -92,6 +92,7 @@ export const deleteRepair: RequestHandler = async (req, res) => {
   try {
     await repairsRepository.getById(req.params.id);
     await repairsRepository.remove(req.params.id);
+    res.set("Content-Type", "text/plain");
     res.status(204).send();
   } catch (err) {
     if (err instanceof NotFoundError) {

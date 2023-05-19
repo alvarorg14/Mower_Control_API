@@ -9,7 +9,7 @@ import ValidationError from "../errors/validation.error";
 export const getParts: RequestHandler = async (req, res) => {
   try {
     const parts = await partsRepository.getAll();
-    res.status(200).send(parts);
+    res.status(200).json(parts);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -19,7 +19,7 @@ export const getParts: RequestHandler = async (req, res) => {
 export const getPartById: RequestHandler = async (req, res) => {
   try {
     const part = await partsRepository.getById(req.params.id);
-    res.status(200).send(part);
+    res.status(200).json(part);
   } catch (err) {
     if (err instanceof NotFoundError) {
       res.status(404).send(err.message);
@@ -33,7 +33,7 @@ export const getPartById: RequestHandler = async (req, res) => {
 export const getPartByReference: RequestHandler = async (req, res) => {
   try {
     const part = await partsRepository.getByReference(req.params.reference);
-    res.status(200).send(part);
+    res.status(200).json(part);
   } catch (err) {
     if (err instanceof NotFoundError) {
       res.status(404).send(err.message);
@@ -56,7 +56,7 @@ export const createPart: RequestHandler = async (req, res) => {
   try {
     validatePart(newPart);
     const part = await partsRepository.create(newPart);
-    res.status(201).send(part);
+    res.status(201).json(part);
   } catch (err) {
     if (err instanceof ValidationError) {
       res.status(400).send(err.message);
@@ -83,7 +83,7 @@ export const updatePart: RequestHandler = async (req, res) => {
     validatePart(partToUpdate);
     partToUpdate.partId = req.params.id;
     const part = await partsRepository.update(req.params.id, partToUpdate);
-    res.status(200).send(part);
+    res.status(200).json(part);
   } catch (err) {
     if (err instanceof ValidationError) {
       res.status(400).send(err.message);
@@ -102,6 +102,7 @@ export const deletePart: RequestHandler = async (req, res) => {
   try {
     await partsRepository.getById(req.params.id);
     await partsRepository.remove(req.params.id);
+    res.set("Content-Type", "text/plain");
     res.status(204).send();
   } catch (err) {
     if (err instanceof NotFoundError) {

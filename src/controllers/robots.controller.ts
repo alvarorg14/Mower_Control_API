@@ -5,7 +5,7 @@ import * as robotsRepository from "../repositories/robots.repository";
 export const getRobots: RequestHandler = async (req, res) => {
   try {
     const robots = await robotsRepository.getAllRobots();
-    res.status(200).send(robots);
+    res.status(200).json(robots);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -26,7 +26,7 @@ export const createRobot: RequestHandler = async (req, res) => {
 
   try {
     const robot = await robotsRepository.createRobot(newRobot);
-    res.status(201).send(robot);
+    res.status(201).json(robot);
   } catch (err) {
     res.status(500).send(err.message);
   }

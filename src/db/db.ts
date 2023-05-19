@@ -21,7 +21,6 @@ export const execute = <T>(query: string, params: string[] | Object): Promise<T>
       console.log("Pool was not created. Ensure pool is created when running the app.");
       throw new Error("Pool was not created. Ensure pool is created when running the app.");
     }
-    console.log("Executing query: " + query);
     return new Promise<T>((resolve, reject) => {
       pool.query(query, params, (error, results) => {
         if (error) {
@@ -40,6 +39,5 @@ export const close = () => {
 };
 
 export const setPool = (mockPool: Pool) => {
-  console.log("Setting mock pool");
   pool = mockPool;
 };

@@ -1,127 +1,111 @@
 import { RequestHandler } from "express";
-import { Model } from "../models/models.model";
-import * as sql from "../models/models.model";
+import { Model, validateModel } from "../models/models.model";
+import * as modelsRepository from "../repositories/models.repository";
+import NotFoundError from "../errors/notFound.error";
+import ValidationError from "../errors/validation.error";
+import DuplicationError from "../errors/duplication.error";
 
 //Get all models
 export const getModels: RequestHandler = async (req, res) => {
-  sql.getAllModels((err: any, data: Model[]) => {
-    if (err) {
-      res.status(500).send("Some error occurred while retrieving models.");
-    } else {
-      res.send(data);
-    }
-  });
+  try {
+    const models = await modelsRepository.getAll();
+    res.status(200).send(models);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 };
 
 //Get a model by id
 export const getModelById: RequestHandler = async (req, res) => {
-  sql.getModelById(req.params.id, (err: any, data: Model) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while retrieving the model.");
+  try {
+    const model = await modelsRepository.getById(req.params.id);
+    res.status(200).send(model);
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      if (data === undefined) {
-        res.status(404).send("Model not found.");
-      } else {
-        res.send(data);
-      }
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
-//Get models by name
+//Get model by name
 export const getModelByName: RequestHandler = async (req, res) => {
-  sql.getModelByName(req.params.name, (err: any, data: Model) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while retrieving the model.");
+  try {
+    const model = await modelsRepository.getByName(req.params.name);
+    res.status(200).send(model);
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      if (data === undefined) {
-        res.status(404).send("Model not found.");
-      } else {
-        res.send(data);
-      }
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
 //Create a new model
 export const createModel: RequestHandler = async (req, res) => {
-  //Validate model
-  const modelToValidate: Model = {
+  const newModel: Model = {
     name: req.body.name,
     surface: req.body.surface,
     maxHours: req.body.maxHours,
   };
 
-  let { error } = sql.validateModel(modelToValidate);
-
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
-
-  const newModel = modelToValidate;
-
-  sql.createModel(newModel, (err: any, data: Model) => {
-    if (err) {
-      console.log(err);
-      if (err.code === "ER_DUP_ENTRY") {
-        res
-          .status(409)
-          .send("Model with name " + newModel.name + " already exists.");
-      } else {
-        res.status(500).send("Some error occurred while creating the Model.");
-      }
+  try {
+    validateModel(newModel);
+    const model = await modelsRepository.create(newModel);
+    res.status(201).send(model);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      res.status(400).send(err.message);
+    } else if (err instanceof DuplicationError) {
+      res.status(409).send(err.message);
     } else {
-      res.send(data);
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
+
+//TODO: COMPROBAR 409 CONFLICTO POR NOMBRE
 
 //Update a model
 export const updateModel: RequestHandler = async (req, res) => {
-  //Validate model
-  const modelToValidate: Model = {
+  const newModel: Model = {
     name: req.body.name,
     surface: req.body.surface,
     maxHours: req.body.maxHours,
   };
 
-  let { error } = sql.validateModel(modelToValidate);
-
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
-
-  const model = modelToValidate;
-  model.modelId = req.params.id;
-
-  sql.updateModel(req.params.id, model, (err: any, data: Model) => {
-    if (err) {
-      console.log(err);
-      if (err.code === "ER_DUP_ENTRY") {
-        res
-          .status(409)
-          .send("Model with name " + model.name + " already exists.");
-      } else {
-        res.status(500).send("Some error occurred while creating the Model.");
-      }
+  try {
+    await modelsRepository.getById(req.params.id);
+    validateModel(newModel);
+    newModel.modelId = req.params.id;
+    const model = await modelsRepository.update(req.params.id, newModel);
+    res.status(200).send(model);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      res.status(400).send(err.message);
+    } else if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
+    } else if (err instanceof DuplicationError) {
+      res.status(409).send(err.message);
     } else {
-      res.send(data);
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
 //Delete a model
 export const deleteModel: RequestHandler = async (req, res) => {
-  sql.deleteModel(req.params.id, (err: any, data: Model) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while deleting the Model.");
+  try {
+    await modelsRepository.getById(req.params.id);
+    await modelsRepository.remove(req.params.id);
+    res.status(204).send();
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      res.send(data);
+      res.status(500).send(err.message);
     }
-  });
+  }
 };

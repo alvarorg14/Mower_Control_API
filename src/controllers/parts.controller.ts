@@ -1,54 +1,51 @@
 import { RequestHandler } from "express";
-import { Part } from "../models/parts.model";
-import * as sql from "../models/parts.model";
+import { Part, validatePart } from "../models/parts.model";
+import * as partsRepository from "../repositories/parts.repository";
+import NotFoundError from "../errors/notFound.error";
+import DuplicationError from "../errors/duplication.error";
+import ValidationError from "../errors/validation.error";
 
 //Get all parts
 export const getParts: RequestHandler = async (req, res) => {
-  sql.getAllParts((err: any, data: Part[]) => {
-    if (err) {
-      res.status(500).send("Some error occurred while retrieving parts.");
-    } else {
-      res.send(data);
-    }
-  });
+  try {
+    const parts = await partsRepository.getAll();
+    res.status(200).send(parts);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 };
 
 //Get a part by id
 export const getPartById: RequestHandler = async (req, res) => {
-  sql.getPartById(req.params.id, (err: any, data: Part) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while retrieving the part.");
+  try {
+    const part = await partsRepository.getById(req.params.id);
+    res.status(200).send(part);
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      if (data === undefined) {
-        res.status(404).send("Part not found.");
-      } else {
-        res.send(data);
-      }
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
-//Get parts by reference
+//Get part by reference
 export const getPartByReference: RequestHandler = async (req, res) => {
-  sql.getPartByReference(req.params.reference, (err: any, data: Part) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while retrieving the part.");
+  try {
+    const part = await partsRepository.getByReference(req.params.reference);
+    res.status(200).send(part);
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      if (data === undefined) {
-        res.status(404).send("Part not found.");
-      } else {
-        res.send(data);
-      }
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
 //Create a new part
 export const createPart: RequestHandler = async (req, res) => {
-  //Validate part
-  const partToValidate: Part = {
+  const newPart: Part = {
     reference: req.body.reference,
     name: req.body.name,
     description: req.body.description,
@@ -56,37 +53,24 @@ export const createPart: RequestHandler = async (req, res) => {
     price: req.body.price,
   };
 
-  let { error } = sql.validatePart(partToValidate);
-
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
-
-  sql.createPart(partToValidate, (err: any, data: Part) => {
-    if (err) {
-      console.log(err);
-      if (err.code === "ER_DUP_ENTRY") {
-        res
-          .status(409)
-          .send(
-            "Part with reference " +
-              partToValidate.reference +
-              " already exists."
-          );
-      } else {
-        res.status(500).send("Some error occurred while creating the Model.");
-      }
+  try {
+    validatePart(newPart);
+    const part = await partsRepository.create(newPart);
+    res.status(201).send(part);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      res.status(400).send(err.message);
+    } else if (err instanceof DuplicationError) {
+      res.status(409).send(err.message);
     } else {
-      res.send(data);
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
 //Update a part
 export const updatePart: RequestHandler = async (req, res) => {
-  //Validate part
-  const partToValidate: Part = {
+  const partToUpdate: Part = {
     reference: req.body.reference,
     name: req.body.name,
     description: req.body.description,
@@ -94,44 +78,36 @@ export const updatePart: RequestHandler = async (req, res) => {
     price: req.body.price,
   };
 
-  let { error } = sql.validatePart(partToValidate);
-
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
-
-  const part = partToValidate;
-  part.partId = req.params.id;
-
-  sql.updatePart(req.params.id, part, (err: any, data: any) => {
-    if (err) {
-      console.log(err);
-      if (err.code === "ER_DUP_ENTRY") {
-        res
-          .status(409)
-          .send(
-            "Part with reference " +
-              partToValidate.reference +
-              " already exists."
-          );
-      } else {
-        res.status(500).send("Some error occurred while creating the Model.");
-      }
+  try {
+    await partsRepository.getById(req.params.id);
+    validatePart(partToUpdate);
+    partToUpdate.partId = req.params.id;
+    const part = await partsRepository.update(req.params.id, partToUpdate);
+    res.status(200).send(part);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      res.status(400).send(err.message);
+    } else if (err instanceof DuplicationError) {
+      res.status(409).send(err.message);
+    } else if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      res.send(data);
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
 //Delete a part
 export const deletePart: RequestHandler = async (req, res) => {
-  sql.deletePart(req.params.id, (err: any, data: any) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while deleting the part.");
+  try {
+    await partsRepository.getById(req.params.id);
+    await partsRepository.remove(req.params.id);
+    res.status(204).send();
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      res.send(data);
+      res.status(500).send(err.message);
     }
-  });
+  }
 };

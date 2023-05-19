@@ -1,15 +1,14 @@
 import { RequestHandler } from "express";
 import { Robot } from "../models/robots.model";
-import * as sql from "../models/robots.model";
+import * as robotsRepository from "../repositories/robots.repository";
 
 export const getRobots: RequestHandler = async (req, res) => {
-  sql.getAllRobots((err: any, data: Robot[]) => {
-    if (err) {
-      res.status(500).send("Some error occurred while retrieving robots.");
-    } else {
-      res.send(data);
-    }
-  });
+  try {
+    const robots = await robotsRepository.getAllRobots();
+    res.status(200).send(robots);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 };
 
 export const createRobot: RequestHandler = async (req, res) => {
@@ -25,12 +24,10 @@ export const createRobot: RequestHandler = async (req, res) => {
     modelId: req.body.modelId,
   };
 
-  sql.createRobot(newRobot, (err: any, data: Robot) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while creating the Robot.");
-    } else {
-      res.send(data);
-    }
-  });
+  try {
+    const robot = await robotsRepository.createRobot(newRobot);
+    res.status(201).send(robot);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 };

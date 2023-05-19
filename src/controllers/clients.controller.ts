@@ -1,101 +1,95 @@
 import { RequestHandler } from "express";
-import { Client } from "../models/clients.model";
-import * as sql from "../models/clients.model";
+import { Client, validateClient } from "../models/clients.model";
+import * as clientsRepository from "../repositories/clients.repository";
+import NotFoundError from "../errors/notFound.error";
+import ValidationError from "../errors/validation.error";
 
 //Get all clients
 export const getClients: RequestHandler = async (req, res) => {
-  sql.getAllClients((err: any, data: Client[]) => {
-    if (err) {
-      res.status(500).send("Some error occurred while retrieving clients.");
-    } else {
-      res.send(data);
-    }
-  });
+  try {
+    const clients = await clientsRepository.getAll();
+    res.status(200).send(clients);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 };
 
 //Get a client by id
 export const getClientById: RequestHandler = async (req, res) => {
-  sql.getClientById(req.params.id, (err: any, data: Client) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while retrieving the client.");
+  try {
+    const client = await clientsRepository.getById(req.params.id);
+    res.status(200).send(client);
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      if (data === undefined) {
-        res.status(404).send("Client not found.");
-      } else {
-        res.send(data);
-      }
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
 //Create a new client
 export const createClient: RequestHandler = async (req, res) => {
-  //Validate client
-  const clientToValidate: Client = {
+  const newClient: Client = {
     name: req.body.name,
     address: req.body.address,
     phoneNumber: req.body.phoneNumber,
   };
 
-  let { error } = sql.validateClient(clientToValidate);
-
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
-
-  const newClient = clientToValidate;
-
-  sql.createClient(newClient, (err: any, data: Client) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while creating the Client.");
+  try {
+    validateClient(newClient);
+    const client = await clientsRepository.create(newClient);
+    res.status(201).send(client);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      res.status(400).send(err.message);
     } else {
-      res.send(data);
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
 //Update a client
 export const updateClient: RequestHandler = async (req, res) => {
-  //Validate client
-  const clientToValidate: Client = {
+  const newClient: Client = {
     name: req.body.name,
     address: req.body.address,
     phoneNumber: req.body.phoneNumber,
   };
 
-  let { error } = sql.validateClient(clientToValidate);
-
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
-
-  const client = clientToValidate;
-  client.clientId = req.params.id;
-
-  sql.updateClient(req.params.id, client, (err: any, data: Client) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while updating the Client.");
+  try {
+    await clientsRepository.getById(req.params.id);
+    validateClient(newClient);
+    newClient.clientId = req.params.id;
+    const updatedClient = await clientsRepository.update(
+      req.params.id,
+      newClient
+    );
+    res.status(200).send(updatedClient);
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      res.status(400).send(err.message);
+    } else if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      res.send(data);
+      res.status(500).send(err.message);
     }
-  });
+  }
 };
 
 //Delete a client
 export const deleteClient: RequestHandler = async (req, res) => {
-  sql.deleteClient(req.params.id, (err: any, data: Client) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send("Some error occurred while deleting the Client.");
+  try {
+    await clientsRepository.getById(req.params.id);
+    await clientsRepository.remove(req.params.id);
+    res
+      .status(200)
+      .send("Client with id " + req.params.id + " deleted successfully.");
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      res.status(404).send(err.message);
     } else {
-      res
-        .status(200)
-        .send("Client with id " + req.params.id + " deleted successfully.");
+      res.status(500).send(err.message);
     }
-  });
+  }
 };

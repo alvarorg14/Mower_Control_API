@@ -11,7 +11,6 @@ let server: Server;
 
 beforeAll(async () => {
   app.use(partsRoutes);
-
   const container = await new MySqlContainer().withReuse().start();
   mockPool(container);
 

@@ -8,7 +8,7 @@ import ValidationError from "../errors/validation.error";
 export const getClients: RequestHandler = async (req, res) => {
   try {
     const clients = await clientsRepository.getAll();
-    res.status(200).send(clients);
+    res.status(200).json(clients);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -18,7 +18,7 @@ export const getClients: RequestHandler = async (req, res) => {
 export const getClientById: RequestHandler = async (req, res) => {
   try {
     const client = await clientsRepository.getById(req.params.id);
-    res.status(200).send(client);
+    res.status(200).json(client);
   } catch (err) {
     if (err instanceof NotFoundError) {
       res.status(404).send(err.message);
@@ -39,7 +39,7 @@ export const createClient: RequestHandler = async (req, res) => {
   try {
     validateClient(newClient);
     const client = await clientsRepository.create(newClient);
-    res.status(201).send(client);
+    res.status(201).json(client);
   } catch (err) {
     if (err instanceof ValidationError) {
       res.status(400).send(err.message);
@@ -61,11 +61,8 @@ export const updateClient: RequestHandler = async (req, res) => {
     await clientsRepository.getById(req.params.id);
     validateClient(newClient);
     newClient.clientId = req.params.id;
-    const updatedClient = await clientsRepository.update(
-      req.params.id,
-      newClient
-    );
-    res.status(200).send(updatedClient);
+    const updatedClient = await clientsRepository.update(req.params.id, newClient);
+    res.status(200).json(updatedClient);
   } catch (err) {
     if (err instanceof ValidationError) {
       res.status(400).send(err.message);
@@ -82,9 +79,8 @@ export const deleteClient: RequestHandler = async (req, res) => {
   try {
     await clientsRepository.getById(req.params.id);
     await clientsRepository.remove(req.params.id);
-    res
-      .status(200)
-      .send("Client with id " + req.params.id + " deleted successfully.");
+    res.set("Content-Type", "text/plain");
+    res.status(200).send("Client with id " + req.params.id + " deleted successfully.");
   } catch (err) {
     if (err instanceof NotFoundError) {
       res.status(404).send(err.message);

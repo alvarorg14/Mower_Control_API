@@ -9,10 +9,10 @@ const oauthUrl = process.env.HUSQVARNA_OAUTH_URL;
 
 export const refreshAllAccessTokens = async (): Promise<void> => {
   const tokens = await tokensRepository.getAll();
-  tokens.forEach(async (token) => {
+  for (const token of tokens) {
     const newToken = await refreshAccessToken(token);
     await tokensRepository.update(token.employeeId, newToken);
-  });
+  }
 };
 
 const refreshAccessToken = async (oldToken: Token): Promise<Token> => {

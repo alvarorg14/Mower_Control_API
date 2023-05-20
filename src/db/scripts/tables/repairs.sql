@@ -6,7 +6,7 @@ CREATE TABLE repairs (
 	`date` DATETIME NOT NULL,
 	robotId varchar(100) NOT NULL,
 	CONSTRAINT repairs_pk PRIMARY KEY (repairId),
-	CONSTRAINT repairs_FK FOREIGN KEY (robotId) REFERENCES mowercontrol.robots(robotId)
+	CONSTRAINT repairs_FK FOREIGN KEY (robotId) REFERENCES robots(robotId)
 )
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_ai_ci;

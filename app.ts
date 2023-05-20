@@ -6,6 +6,7 @@ import partsRoutes from "./src/routes/parts.routes";
 import reapirsRoutes from "./src/routes/repairs.routes";
 import companiesRoutes from "./src/routes/companies.routes";
 import employeesRoutes from "./src/routes/employees.routes";
+import tokensRoutes from "./src/routes/tokens.routes";
 import * as db from "./src/db/db";
 
 const bodyParser = require("body-parser");
@@ -21,6 +22,7 @@ app.use(partsRoutes);
 app.use(reapirsRoutes);
 app.use(companiesRoutes);
 app.use(employeesRoutes);
+app.use(tokensRoutes);
 
 db.init();
 

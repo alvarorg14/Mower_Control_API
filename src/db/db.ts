@@ -12,6 +12,7 @@ export const init = () => {
     user: dbConfig.USER,
     password: dbConfig.PASSWORD,
     database: dbConfig.DB,
+    port: dbConfig.PORT,
   });
 };
 

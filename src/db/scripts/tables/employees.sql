@@ -5,7 +5,7 @@ CREATE TABLE employees (
 	password varchar(100) NOT NULL,
 	companyId varchar(100) NOT NULL,
 	CONSTRAINT employees_pk PRIMARY KEY (employeeId),
-	CONSTRAINT employees_FK FOREIGN KEY (companyId) REFERENCES mowercontrol.companies(companyId)
+	CONSTRAINT employees_FK FOREIGN KEY (companyId) REFERENCES companies(companyId)
 )
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_0900_ai_ci;

@@ -51,6 +51,8 @@ app.use(loginRoutes);
 
 //Global error handler
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.log(err);
+
   if (err instanceof NotFoundError) {
     res.status(404).send(err.message);
   } else if (err instanceof ValidationError) {

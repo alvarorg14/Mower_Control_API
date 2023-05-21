@@ -21,7 +21,6 @@ export const verifyToken = async (request: Request, response: Response, next: Ne
     request.companyId = decoded.companyId;
     next();
   } catch (error) {
-    console.log(error);
     return response.status(401).json({ message: "Unauthorized" });
   }
 };

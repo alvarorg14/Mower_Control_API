@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { Robot } from "../models/robots.model";
 import * as robotsRepository from "../repositories/robots.repository";
 import * as robotsService from "../services/robots.service";
+import { checkCompany } from "../helpers/security.helper";
 
 export const getRobots: RequestHandler = async (req, res, next) => {
   try {
@@ -49,6 +50,7 @@ export const updateRobotsByCompany: RequestHandler = async (req, res, next) => {
   const companyId = req.params.companyId;
 
   try {
+    await checkCompany(companyId, req.companyId);
     await robotsService.updateRobotsByCompany(companyId);
     res.set("Content-Type", "text/plain");
     res.status(200).send(`Robots updated successfully for company ${companyId}`);

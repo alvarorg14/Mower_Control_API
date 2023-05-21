@@ -9,7 +9,7 @@ import * as incidencesRepository from "../repositories/incidences.repository";
 
 export const checkIncidence = async (robot: Robot, mower: Mower): Promise<void> => {
   if (mower.errorCode != 0 && robot.errorCode != mower.errorCode && robot.assignedToClient) {
-    createIncidence(robot, mower);
+    await createIncidence(robot, mower);
   }
 };
 

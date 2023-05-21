@@ -6,7 +6,7 @@ import NotFoundError from "../errors/notFound.error";
 //Get incidences by robotId
 export const getIncidencesByRobotId: RequestHandler = async (req, res) => {
   try {
-    const incidences = await incidencesRepository.getByRobotId(req.params.robotId);
+    const incidences: Incidence[] = await incidencesRepository.getByRobotId(req.params.robotId);
     res.status(200).json(incidences);
   } catch (err) {
     res.status(500).send(err.message);
@@ -21,7 +21,7 @@ export const getIncidencesByReadStatus: RequestHandler = async (req, res) => {
     return;
   }
   try {
-    const incidences = await incidencesRepository.getByReadedStatus(status === "true");
+    const incidences: Incidence[] = await incidencesRepository.getByReadedStatus(status === "true");
     res.status(200).json(incidences);
   } catch (err) {
     res.status(500).send(err.message);

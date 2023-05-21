@@ -20,7 +20,7 @@ export const updateRobots = async () => {
 export const updateRobotsByCompany = async (companyId: string) => {
   const token: Token = await tokensRepository.getByCompanyId(companyId);
   //const mowers: Mower[] = await getMowers(token.accessToken);
-  const mowers: Mower[] = await getFakeMowers();
+  const mowers: Mower[] = getFakeMowers();
   await updateMowers(mowers);
 };
 

@@ -1,7 +1,6 @@
 import { execute } from "../db/db";
 import NotFoundError from "../errors/notFound.error";
 import { Incidence } from "../models/incidences.model";
-import { v4 as uuidv4 } from "uuid";
 
 //Get incidence by id
 export const getById = async (incidenceId: string): Promise<Incidence> => {

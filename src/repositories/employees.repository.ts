@@ -34,6 +34,14 @@ export const getByCompanyId = async (companyId: string): Promise<Employee[]> => 
   return results;
 };
 
+//Get admin employee of a company
+export const getAdminByCompanyId = async (companyId: string): Promise<Employee> => {
+  const query = "SELECT * FROM employees WHERE companyId = ? AND role = 'admin'";
+  const results = await execute<Employee[]>(query, [companyId]);
+  if (results.length === 0) throw new NotFoundError("Admin employee not found");
+  return results[0];
+};
+
 //Create a new employee
 export const create = async (newEmployee: Employee): Promise<Employee> => {
   newEmployee.employeeId = uuidv4();

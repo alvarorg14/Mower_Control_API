@@ -2,7 +2,7 @@ CREATE TABLE employees (
 	employeeId varchar(100) NOT NULL,
 	name varchar(100) NOT NULL,
 	username varchar(100) NOT NULL,
-	password varchar(100) NOT NULL
+	password varchar(100) NOT NULL,
 	role varchar(100) NOT NULL,
 	companyId varchar(100) NOT NULL,
 	CONSTRAINT employees_pk PRIMARY KEY (employeeId),

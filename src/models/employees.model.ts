@@ -27,7 +27,7 @@ export const validateEmployee = (employee: Employee) => {
 export const employeeSchema = Joi.object({
   name: Joi.string().min(3).max(50).required(),
   username: Joi.string().min(3).max(50).required(),
-  password: Joi.string().min(8).required(),
+  password: Joi.required(),
   role: Joi.string().valid(Role.ADMIN, Role.STANDARD).required(),
   companyId: Joi.string().required(),
 });

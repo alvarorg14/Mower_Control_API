@@ -17,7 +17,7 @@
                     "activity": "CHARGING",
                     "state": "IN_OPERATION",
                     "errorCode": 0,
-                    "errorCodeTimestamp": 0
+                    "errorCodeTimestamp": 1684479611000
                 },
                 "calendar": {
                     "tasks": [

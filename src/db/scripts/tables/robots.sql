@@ -7,8 +7,10 @@ CREATE TABLE robots (
 	activity varchar(100) NOT NULL,
 	state varchar(100) NOT NULL,
 	errorCode INT NOT NULL,
+	errorCodeTimestamp BIGINT NOT NULL,
 	model varchar(100) NOT NULL,
-	clientId varchar(100) NOT NULL,
+	clientId varchar(100),
+	assignedToClient boolean NOT NULL,
 	CONSTRAINT robots_pk PRIMARY KEY (robotId),
 	CONSTRAINT robots_un UNIQUE KEY (serialNumber),
     CONSTRAINT robots_clients_FK FOREIGN KEY (clientId) REFERENCES clients(clientId)

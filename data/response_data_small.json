@@ -1,0 +1,530 @@
+{
+    "data": [
+        {
+            "type": "mower",
+            "id": "e8f87743-fa97-4696-bbae-886b25cf32be",
+            "attributes": {
+                "system": {
+                    "name": "Pablo Gonzalez",
+                    "model": "HUSQVARNA AUTOMOWER® 430X",
+                    "serialNumber": 160905383
+                },
+                "battery": {
+                    "batteryPercent": 53
+                },
+                "mower": {
+                    "mode": "MAIN_AREA",
+                    "activity": "CHARGING",
+                    "state": "IN_OPERATION",
+                    "errorCode": 0,
+                    "errorCodeTimestamp": 0
+                },
+                "calendar": {
+                    "tasks": [
+                        {
+                            "start": 60,
+                            "duration": 1375,
+                            "monday": true,
+                            "tuesday": true,
+                            "wednesday": true,
+                            "thursday": true,
+                            "friday": true,
+                            "saturday": true,
+                            "sunday": true
+                        }
+                    ]
+                },
+                "planner": {
+                    "nextStartTimestamp": 1684530538000,
+                    "override": {
+                        "action": "NOT_ACTIVE"
+                    },
+                    "restrictedReason": "NOT_APPLICABLE"
+                },
+                "metadata": {
+                    "connected": true,
+                    "statusTimestamp": 1684523911634
+                },
+                "positions": [
+                    {
+                        "latitude": 43.5755316,
+                        "longitude": -6.2464616
+                    },
+                    {
+                        "latitude": 43.5757523,
+                        "longitude": -6.2470161
+                    },
+                    {
+                        "latitude": 43.575672,
+                        "longitude": -6.2469015
+                    },
+                    {
+                        "latitude": 43.5756549,
+                        "longitude": -6.2468328
+                    },
+                    {
+                        "latitude": 43.5756147,
+                        "longitude": -6.2467239
+                    },
+                    {
+                        "latitude": 43.5755689,
+                        "longitude": -6.2466093
+                    },
+                    {
+                        "latitude": 43.5755116,
+                        "longitude": -6.2464833
+                    },
+                    {
+                        "latitude": 43.5757408,
+                        "longitude": -6.2470604
+                    },
+                    {
+                        "latitude": 43.5757293,
+                        "longitude": -6.2470317
+                    },
+                    {
+                        "latitude": 43.5757522,
+                        "longitude": -6.2469458
+                    },
+                    {
+                        "latitude": 43.5757923,
+                        "longitude": -6.247089
+                    },
+                    {
+                        "latitude": 43.5757408,
+                        "longitude": -6.2469859
+                    },
+                    {
+                        "latitude": 43.5757351,
+                        "longitude": -6.24694
+                    },
+                    {
+                        "latitude": 43.5757866,
+                        "longitude": -6.2470833
+                    },
+                    {
+                        "latitude": 43.5755459,
+                        "longitude": -6.2469405
+                    },
+                    {
+                        "latitude": 43.5754542,
+                        "longitude": -6.2468373
+                    },
+                    {
+                        "latitude": 43.5753625,
+                        "longitude": -6.2467285
+                    },
+                    {
+                        "latitude": 43.5754256,
+                        "longitude": -6.2467227
+                    },
+                    {
+                        "latitude": 43.5755573,
+                        "longitude": -6.2467056
+                    },
+                    {
+                        "latitude": 43.5756719,
+                        "longitude": -6.2466826
+                    },
+                    {
+                        "latitude": 43.5757865,
+                        "longitude": -6.2466311
+                    },
+                    {
+                        "latitude": 43.575735,
+                        "longitude": -6.246654
+                    },
+                    {
+                        "latitude": 43.5756204,
+                        "longitude": -6.2467227
+                    },
+                    {
+                        "latitude": 43.5755172,
+                        "longitude": -6.2468144
+                    },
+                    {
+                        "latitude": 43.5754198,
+                        "longitude": -6.2469118
+                    },
+                    {
+                        "latitude": 43.5753568,
+                        "longitude": -6.2469118
+                    },
+                    {
+                        "latitude": 43.5753854,
+                        "longitude": -6.2469405
+                    },
+                    {
+                        "latitude": 43.5754886,
+                        "longitude": -6.247015
+                    },
+                    {
+                        "latitude": 43.5756032,
+                        "longitude": -6.247015
+                    },
+                    {
+                        "latitude": 43.5757178,
+                        "longitude": -6.2469691
+                    },
+                    {
+                        "latitude": 43.5757521,
+                        "longitude": -6.247015
+                    },
+                    {
+                        "latitude": 43.5757751,
+                        "longitude": -6.2470207
+                    },
+                    {
+                        "latitude": 43.5757751,
+                        "longitude": -6.2469748
+                    },
+                    {
+                        "latitude": 43.575712,
+                        "longitude": -6.2470551
+                    },
+                    {
+                        "latitude": 43.5757407,
+                        "longitude": -6.2469978
+                    },
+                    {
+                        "latitude": 43.5757063,
+                        "longitude": -6.2469691
+                    },
+                    {
+                        "latitude": 43.5758037,
+                        "longitude": -6.2469462
+                    },
+                    {
+                        "latitude": 43.5757636,
+                        "longitude": -6.2469748
+                    },
+                    {
+                        "latitude": 43.5757178,
+                        "longitude": -6.2470723
+                    },
+                    {
+                        "latitude": 43.5757521,
+                        "longitude": -6.2469863
+                    },
+                    {
+                        "latitude": 43.5757636,
+                        "longitude": -6.2469978
+                    },
+                    {
+                        "latitude": 43.575735,
+                        "longitude": -6.2469233
+                    },
+                    {
+                        "latitude": 43.5754607,
+                        "longitude": -6.2464603
+                    },
+                    {
+                        "latitude": 43.5754263,
+                        "longitude": -6.2465348
+                    },
+                    {
+                        "latitude": 43.5754206,
+                        "longitude": -6.2464775
+                    },
+                    {
+                        "latitude": 43.5754549,
+                        "longitude": -6.2465463
+                    },
+                    {
+                        "latitude": 43.5754435,
+                        "longitude": -6.2465348
+                    },
+                    {
+                        "latitude": 43.5755122,
+                        "longitude": -6.2465692
+                    },
+                    {
+                        "latitude": 43.5756268,
+                        "longitude": -6.2466494
+                    },
+                    {
+                        "latitude": 43.57573,
+                        "longitude": -6.2467182
+                    }
+                ],
+                "settings": {
+                    "cuttingHeight": 8,
+                    "headlight": {
+                        "mode": "ALWAYS_OFF"
+                    }
+                },
+                "statistics": {
+                    "numberOfChargingCycles": 4875,
+                    "numberOfCollisions": 53853,
+                    "totalChargingTime": 16801200,
+                    "totalCuttingTime": 31716000,
+                    "totalRunningTime": 33775200,
+                    "totalSearchingTime": 2059200
+                }
+            }
+        },
+        {
+            "type": "mower",
+            "id": "ef6fd484-8787-466c-b475-a207697b94ee",
+            "attributes": {
+                "system": {
+                    "name": "Daniel lopez (Gijon)",
+                    "model": "HUSQVARNA AUTOMOWER® 420",
+                    "serialNumber": 162602909
+                },
+                "battery": {
+                    "batteryPercent": 100
+                },
+                "mower": {
+                    "mode": "HOME",
+                    "activity": "PARKED_IN_CS",
+                    "state": "RESTRICTED",
+                    "errorCode": 0,
+                    "errorCodeTimestamp": 0
+                },
+                "calendar": {
+                    "tasks": [
+                        {
+                            "start": 600,
+                            "duration": 540,
+                            "monday": true,
+                            "tuesday": true,
+                            "wednesday": true,
+                            "thursday": true,
+                            "friday": true,
+                            "saturday": false,
+                            "sunday": false
+                        }
+                    ]
+                },
+                "planner": {
+                    "nextStartTimestamp": 0,
+                    "override": {
+                        "action": "NOT_ACTIVE"
+                    },
+                    "restrictedReason": "NOT_APPLICABLE"
+                },
+                "metadata": {
+                    "connected": true,
+                    "statusTimestamp": 1684524699013
+                },
+                "positions": [
+                    {
+                        "latitude": 43.4889116,
+                        "longitude": -5.3894183
+                    },
+                    {
+                        "latitude": 43.4889366,
+                        "longitude": -5.38943
+                    },
+                    {
+                        "latitude": 43.4889466,
+                        "longitude": -5.389445
+                    },
+                    {
+                        "latitude": 43.48894,
+                        "longitude": -5.3894383
+                    },
+                    {
+                        "latitude": 43.4889683,
+                        "longitude": -5.3894233
+                    },
+                    {
+                        "latitude": 43.4889866,
+                        "longitude": -5.389425
+                    },
+                    {
+                        "latitude": 43.4888833,
+                        "longitude": -5.3894333
+                    },
+                    {
+                        "latitude": 43.4889233,
+                        "longitude": -5.389445
+                    },
+                    {
+                        "latitude": 43.4889416,
+                        "longitude": -5.3894316
+                    },
+                    {
+                        "latitude": 43.48895,
+                        "longitude": -5.3894016
+                    },
+                    {
+                        "latitude": 43.488895,
+                        "longitude": -5.3893616
+                    },
+                    {
+                        "latitude": 43.4889,
+                        "longitude": -5.3893533
+                    },
+                    {
+                        "latitude": 43.488945,
+                        "longitude": -5.3893583
+                    },
+                    {
+                        "latitude": 43.4889683,
+                        "longitude": -5.3893766
+                    },
+                    {
+                        "latitude": 43.4889733,
+                        "longitude": -5.3893816
+                    },
+                    {
+                        "latitude": 43.4889416,
+                        "longitude": -5.389355
+                    },
+                    {
+                        "latitude": 43.4889816,
+                        "longitude": -5.3893866
+                    },
+                    {
+                        "latitude": 43.4889533,
+                        "longitude": -5.389375
+                    },
+                    {
+                        "latitude": 43.4889516,
+                        "longitude": -5.3893716
+                    },
+                    {
+                        "latitude": 43.4889733,
+                        "longitude": -5.3893466
+                    },
+                    {
+                        "latitude": 43.4889683,
+                        "longitude": -5.38937
+                    },
+                    {
+                        "latitude": 43.488955,
+                        "longitude": -5.389395
+                    },
+                    {
+                        "latitude": 43.48894,
+                        "longitude": -5.3893783
+                    },
+                    {
+                        "latitude": 43.4889233,
+                        "longitude": -5.3893933
+                    },
+                    {
+                        "latitude": 43.4888916,
+                        "longitude": -5.3894133
+                    },
+                    {
+                        "latitude": 43.488885,
+                        "longitude": -5.38941
+                    },
+                    {
+                        "latitude": 43.4888866,
+                        "longitude": -5.389425
+                    },
+                    {
+                        "latitude": 43.4889,
+                        "longitude": -5.3894383
+                    },
+                    {
+                        "latitude": 43.48891,
+                        "longitude": -5.3894416
+                    },
+                    {
+                        "latitude": 43.4889283,
+                        "longitude": -5.3894233
+                    },
+                    {
+                        "latitude": 43.4889416,
+                        "longitude": -5.3894366
+                    },
+                    {
+                        "latitude": 43.488945,
+                        "longitude": -5.3894116
+                    },
+                    {
+                        "latitude": 43.48895,
+                        "longitude": -5.3894183
+                    },
+                    {
+                        "latitude": 43.4888191,
+                        "longitude": -5.3890507
+                    },
+                    {
+                        "latitude": 43.4888191,
+                        "longitude": -5.3890449
+                    },
+                    {
+                        "latitude": 43.4887962,
+                        "longitude": -5.3891022
+                    },
+                    {
+                        "latitude": 43.4888363,
+                        "longitude": -5.3892054
+                    },
+                    {
+                        "latitude": 43.4889051,
+                        "longitude": -5.3893314
+                    },
+                    {
+                        "latitude": 43.4889509,
+                        "longitude": -5.3894116
+                    },
+                    {
+                        "latitude": 43.4889566,
+                        "longitude": -5.3894116
+                    },
+                    {
+                        "latitude": 43.488815,
+                        "longitude": -5.3890533
+                    },
+                    {
+                        "latitude": 43.4888133,
+                        "longitude": -5.3890516
+                    },
+                    {
+                        "latitude": 43.4888166,
+                        "longitude": -5.3890316
+                    },
+                    {
+                        "latitude": 43.4888183,
+                        "longitude": -5.3890266
+                    },
+                    {
+                        "latitude": 43.4888199,
+                        "longitude": -5.38902
+                    },
+                    {
+                        "latitude": 43.488815,
+                        "longitude": -5.389025
+                    },
+                    {
+                        "latitude": 43.4888283,
+                        "longitude": -5.3890216
+                    },
+                    {
+                        "latitude": 43.488845,
+                        "longitude": -5.389035
+                    },
+                    {
+                        "latitude": 43.4888866,
+                        "longitude": -5.3890333
+                    },
+                    {
+                        "latitude": 43.4889366,
+                        "longitude": -5.3890583
+                    }
+                ],
+                "settings": {
+                    "cuttingHeight": 3,
+                    "headlight": {
+                        "mode": "ALWAYS_ON"
+                    }
+                },
+                "statistics": {
+                    "numberOfChargingCycles": 730,
+                    "numberOfCollisions": 25761,
+                    "totalChargingTime": 2538000,
+                    "totalCuttingTime": 3578400,
+                    "totalRunningTime": 3884400,
+                    "totalSearchingTime": 306000
+                }
+            }
+        }
+    ]
+}

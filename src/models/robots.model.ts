@@ -7,6 +7,8 @@ export type Robot = {
   activity: string;
   state: string;
   errorCode: number;
-  clientId: string;
-  modelId: string;
+  errorCodeTimestamp: number;
+  clientId: string | null;
+  model: string;
+  assignedToClient: boolean;
 };

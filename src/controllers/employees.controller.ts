@@ -1,7 +1,11 @@
 import { RequestHandler } from "express";
-import { Employee, validateEmployee } from "../models/employees.model";
+import { Employee, validateEmployee, Role } from "../models/employees.model";
 import * as employeesRepository from "../repositories/employees.repository";
 import * as companiesRepository from "../repositories/companies.repository";
+import { generateUsername, reformatName } from "../helpers/username.helper";
+import { generatePassword } from "../helpers/password.helper";
+import ValidationError from "../errors/validation.error";
+const bcrypt = require("bcryptjs");
 
 //Get all employees
 export const getEmployees: RequestHandler = async (req, res, next) => {
@@ -35,19 +39,41 @@ export const getEmployeesByCompanyId: RequestHandler = async (req, res, next) =>
 
 //Create a new employee
 export const createEmployee: RequestHandler = async (req, res, next) => {
-  const newEmployee: Employee = {
-    name: req.body.name,
-    username: req.body.username,
-    password: req.body.password,
-    role: req.body.role,
-    companyId: req.body.companyId,
-  };
-
   try {
-    await companiesRepository.getById(newEmployee.companyId);
+    const username = await generateUsername(req.body.name, req.body.surname1, req.body.surname2);
+    const name = reformatName(req.body.name, req.body.surname1, req.body.surname2);
+    const password = generatePassword();
+    const encryptedPassword = await bcrypt.hash(password, 10);
+
+    const newEmployee: Employee = {
+      name: name,
+      username: username,
+      password: encryptedPassword,
+      role: Role.STANDARD,
+      companyId: req.companyId as string,
+    };
+
     validateEmployee(newEmployee);
     const employee = await employeesRepository.create(newEmployee);
+    employee.password = password;
     res.status(201).json(employee);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updatePassword: RequestHandler = async (req, res, next) => {
+  try {
+    const employee = await employeesRepository.getById(req.userId as string);
+    const validPassword = await bcrypt.compare(req.body.oldPassword, employee.password);
+    if (!validPassword) {
+      throw new ValidationError("Invalid password");
+    }
+
+    const encryptedPassword = await bcrypt.hash(req.body.newPassword, 10);
+    employee.password = encryptedPassword;
+    await employeesRepository.update(req.userId as string, employee);
+    res.status(200).json(employee);
   } catch (err) {
     next(err);
   }

@@ -37,7 +37,7 @@ export const signUpCompany: RequestHandler = async (req, res) => {
     const token = generateAccessToken(employee);
     res.status(201).json({ id: employee.employeeId, token: token });
   } catch (err) {
-    removeCompanyIfEmployeeCreationFails(company!);
+    await removeCompanyIfEmployeeCreationFails(company!);
     if (err instanceof ValidationError) {
       res.status(400).send(err.message);
     } else if (err instanceof DuplicationError) {

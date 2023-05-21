@@ -6,6 +6,7 @@ export const generateAccessToken = (employee: Employee) => {
   const payload = {
     id: employee.employeeId,
     role: employee.role,
+    companyId: employee.companyId,
   };
 
   const options = {

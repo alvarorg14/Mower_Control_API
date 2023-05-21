@@ -17,17 +17,13 @@ export const getEmployees: RequestHandler = async (req, res) => {
 };
 
 //Get an employee by id
-export const getEmployeeById: RequestHandler = async (req, res) => {
+export const getEmployeeById: RequestHandler = async (req, res, next) => {
   try {
     const employee = await employeesRepository.getById(req.params.id);
     res.status(200).json(employee);
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
-  }
+    next(err);
+  }  
 };
 
 //Get employees by companyId

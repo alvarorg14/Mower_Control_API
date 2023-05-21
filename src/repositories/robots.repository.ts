@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import { Robot } from "../models/robots.model";
 import { execute } from "../db/db";
 import NotFoundError from "../errors/notFound.error";

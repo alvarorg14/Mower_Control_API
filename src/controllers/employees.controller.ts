@@ -2,17 +2,14 @@ import { RequestHandler } from "express";
 import { Employee, validateEmployee } from "../models/employees.model";
 import * as employeesRepository from "../repositories/employees.repository";
 import * as companiesRepository from "../repositories/companies.repository";
-import NotFoundError from "../errors/notFound.error";
-import ValidationError from "../errors/validation.error";
-import DuplicationError from "../errors/duplication.error";
 
 //Get all employees
-export const getEmployees: RequestHandler = async (req, res) => {
+export const getEmployees: RequestHandler = async (req, res, next) => {
   try {
     const employees = await employeesRepository.getAll();
     res.status(200).json(employees);
   } catch (err) {
-    res.status(500).send(err.message);
+    next(err);
   }
 };
 
@@ -23,21 +20,21 @@ export const getEmployeeById: RequestHandler = async (req, res, next) => {
     res.status(200).json(employee);
   } catch (err) {
     next(err);
-  }  
+  }
 };
 
 //Get employees by companyId
-export const getEmployeesByCompanyId: RequestHandler = async (req, res) => {
+export const getEmployeesByCompanyId: RequestHandler = async (req, res, next) => {
   try {
     const employees = await employeesRepository.getByCompanyId(req.params.companyId);
     res.status(200).json(employees);
   } catch (err) {
-    res.status(500).send(err.message);
+    next(err);
   }
 };
 
 //Create a new employee
-export const createEmployee: RequestHandler = async (req, res) => {
+export const createEmployee: RequestHandler = async (req, res, next) => {
   const newEmployee: Employee = {
     name: req.body.name,
     username: req.body.username,
@@ -52,18 +49,12 @@ export const createEmployee: RequestHandler = async (req, res) => {
     const employee = await employeesRepository.create(newEmployee);
     res.status(201).json(employee);
   } catch (err) {
-    if (err instanceof ValidationError) {
-      res.status(400).send(err.message);
-    } else if (err instanceof DuplicationError) {
-      res.status(409).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Update an employee
-export const updateEmployee: RequestHandler = async (req, res) => {
+export const updateEmployee: RequestHandler = async (req, res, next) => {
   const updatedEmployee: Employee = {
     name: req.body.name,
     username: req.body.username,
@@ -80,27 +71,17 @@ export const updateEmployee: RequestHandler = async (req, res) => {
     const employee = await employeesRepository.update(req.params.id, updatedEmployee);
     res.status(200).json(employee);
   } catch (err) {
-    if (err instanceof ValidationError) {
-      res.status(400).send(err.message);
-    } else if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Delete an employee
-export const deleteEmployee: RequestHandler = async (req, res) => {
+export const deleteEmployee: RequestHandler = async (req, res, next) => {
   try {
     await employeesRepository.getById(req.params.id);
     await employeesRepository.remove(req.params.id);
     res.sendStatus(204);
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };

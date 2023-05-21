@@ -17,16 +17,17 @@ import * as db from "./src/db/db";
 import NotFoundError from "./src/errors/notFound.error";
 import ValidationError from "./src/errors/validation.error";
 import DuplicationError from "./src/errors/duplication.error";
+import UnauthorizedError from "./src/errors/unauthorized.error";
+import ForbiddenError from "./src/errors/forbidden.error";
 
 declare global {
-    namespace Express {
-      interface Request {
-        userId?: string;
-        companyId?: string;
-      }
+  namespace Express {
+    interface Request {
+      userId?: string;
+      companyId?: string;
     }
   }
-
+}
 
 const bodyParser = require("body-parser");
 
@@ -54,8 +55,12 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
     res.status(404).send(err.message);
   } else if (err instanceof ValidationError) {
     res.status(400).send(err.message);
-  } else if (err instanceof DuplicationError){
+  } else if (err instanceof DuplicationError) {
     res.status(409).send(err.message);
+  } else if (err instanceof UnauthorizedError) {
+    res.status(401).send(err.message);
+  } else if (err instanceof ForbiddenError) {
+    res.status(403).send(err.message);
   } else {
     res.status(500).send(err.message);
   }

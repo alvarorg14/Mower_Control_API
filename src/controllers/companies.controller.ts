@@ -1,50 +1,39 @@
 import { RequestHandler } from "express";
 import { Company, validateCompany } from "../models/companies.model";
 import * as companiesRepository from "../repositories/companies.repository";
-import NotFoundError from "../errors/notFound.error";
-import ValidationError from "../errors/validation.error";
-import DuplicationError from "../errors/duplication.error";
 
 //Get all companies
-export const getCompanies: RequestHandler = async (req, res) => {
+export const getCompanies: RequestHandler = async (req, res, next) => {
   try {
     const companies = await companiesRepository.getAll();
     res.status(200).json(companies);
   } catch (err) {
-    res.status(500).send(err.message);
+    next(err);
   }
 };
 
 //Get a company by id
-export const getCompanyById: RequestHandler = async (req, res) => {
+export const getCompanyById: RequestHandler = async (req, res, next) => {
   try {
     const company = await companiesRepository.getById(req.params.id);
     res.status(200).json(company);
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Get a companu by CIF
-export const getCompanyByCIF: RequestHandler = async (req, res) => {
+export const getCompanyByCIF: RequestHandler = async (req, res, next) => {
   try {
     const company = await companiesRepository.getByCIF(req.params.cif);
     res.status(200).json(company);
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Create a new company
-export const createCompany: RequestHandler = async (req, res) => {
+export const createCompany: RequestHandler = async (req, res, next) => {
   const newCompany: Company = {
     name: req.body.name,
     CIF: req.body.cif,
@@ -55,18 +44,12 @@ export const createCompany: RequestHandler = async (req, res) => {
     const company = await companiesRepository.create(newCompany);
     res.status(201).json(company);
   } catch (err) {
-    if (err instanceof ValidationError) {
-      res.status(400).send(err.message);
-    } else if (err instanceof DuplicationError) {
-      res.status(409).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Update a company
-export const updateCompany: RequestHandler = async (req, res) => {
+export const updateCompany: RequestHandler = async (req, res, next) => {
   const newCompany: Company = {
     name: req.body.name,
     CIF: req.body.cif,
@@ -79,29 +62,17 @@ export const updateCompany: RequestHandler = async (req, res) => {
     const company = await companiesRepository.update(req.params.id, newCompany);
     res.status(200).json(company);
   } catch (err) {
-    if (err instanceof ValidationError) {
-      res.status(400).send(err.message);
-    } else if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else if (err instanceof DuplicationError) {
-      res.status(409).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Delete a company
-export const deleteCompany: RequestHandler = async (req, res) => {
+export const deleteCompany: RequestHandler = async (req, res, next) => {
   try {
     await companiesRepository.getById(req.params.id);
     await companiesRepository.remove(req.params.id);
     res.status(204).send();
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };

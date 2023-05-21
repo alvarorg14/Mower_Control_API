@@ -1,44 +1,38 @@
 import { RequestHandler } from "express";
 import { Repair, validateRepair } from "../models/repairs.model";
 import * as repairsRepository from "../repositories/repairs.repository";
-import NotFoundError from "../errors/notFound.error";
-import ValidationError from "../errors/validation.error";
 
 //Get all repairs
-export const getAllRepairs: RequestHandler = async (req, res) => {
+export const getAllRepairs: RequestHandler = async (req, res, next) => {
   try {
     const repairs = await repairsRepository.getAll();
     res.status(200).json(repairs);
   } catch (err) {
-    res.status(500).send(err.message);
+    next(err);
   }
 };
 
 //Get a repair by id
-export const getRepairById: RequestHandler = async (req, res) => {
+export const getRepairById: RequestHandler = async (req, res, next) => {
   try {
     const repairs = await repairsRepository.getById(req.params.id);
     res.status(200).json(repairs);
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Get repairs by robotId
-export const getRepairsByRobotId: RequestHandler = async (req, res) => {
+export const getRepairsByRobotId: RequestHandler = async (req, res, next) => {
   try {
     const repairs = await repairsRepository.getByRobotId(req.params.robotId);
     res.status(200).json(repairs);
   } catch (err) {
-    res.status(500).send(err.message);
+    next(err);
   }
 };
 
-export const createRepair: RequestHandler = async (req, res) => {
+export const createRepair: RequestHandler = async (req, res, next) => {
   let newRepair: Repair = {
     title: req.body.title,
     description: req.body.description,
@@ -52,16 +46,12 @@ export const createRepair: RequestHandler = async (req, res) => {
     const repair = await repairsRepository.create(newRepair);
     res.status(201).json(repair);
   } catch (err) {
-    if (err instanceof ValidationError) {
-      res.status(400).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Update a repair
-export const updateRepair: RequestHandler = async (req, res) => {
+export const updateRepair: RequestHandler = async (req, res, next) => {
   let newRepair: Repair = {
     title: req.body.title,
     description: req.body.description,
@@ -77,28 +67,18 @@ export const updateRepair: RequestHandler = async (req, res) => {
     const repair = await repairsRepository.update(req.params.id, newRepair);
     res.status(200).json(repair);
   } catch (err) {
-    if (err instanceof ValidationError) {
-      res.status(400).send(err.message);
-    } else if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Delete a repair
-export const deleteRepair: RequestHandler = async (req, res) => {
+export const deleteRepair: RequestHandler = async (req, res, next) => {
   try {
     await repairsRepository.getById(req.params.id);
     await repairsRepository.remove(req.params.id);
     res.set("Content-Type", "text/plain");
     res.status(204).send();
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };

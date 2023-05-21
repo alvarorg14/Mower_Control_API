@@ -3,13 +3,10 @@ import * as companiesRepository from "../repositories/companies.repository";
 import * as employeesRepository from "../repositories/employees.repository";
 import { Company, validateCompany } from "../models/companies.model";
 import { Employee, validateEmployee, Role } from "../models/employees.model";
-import ValidationError from "../errors/validation.error";
-import DuplicationError from "../errors/duplication.error";
 import { generateAccessToken } from "../helpers/jwt.helper";
-import NotFoundError from "../errors/notFound.error";
 const bcrypt = require("bcryptjs");
 
-export const signUpCompany: RequestHandler = async (req, res) => {
+export const signUpCompany: RequestHandler = async (req, res, next) => {
   const { companyName, cif, username, password, name } = req.body;
   //TODO: validate password
 
@@ -38,13 +35,7 @@ export const signUpCompany: RequestHandler = async (req, res) => {
     res.status(201).json({ id: employee.employeeId, token: token });
   } catch (err) {
     await removeCompanyIfEmployeeCreationFails(company!);
-    if (err instanceof ValidationError) {
-      res.status(400).send(err.message);
-    } else if (err instanceof DuplicationError) {
-      res.status(409).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
@@ -54,7 +45,7 @@ const removeCompanyIfEmployeeCreationFails = async (company: Company) => {
   }
 };
 
-export const login: RequestHandler = async (req, res) => {
+export const login: RequestHandler = async (req, res, next) => {
   const { username, password } = req.body;
   try {
     const employee = await employeesRepository.getByUsername(username);
@@ -68,10 +59,6 @@ export const login: RequestHandler = async (req, res) => {
     const token = generateAccessToken(employee);
     res.status(200).json({ id: employee.employeeId, token: token });
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(400).send("Invalid username or password");
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };

@@ -1,20 +1,19 @@
 import { RequestHandler } from "express";
 import * as incidencesRepository from "../repositories/incidences.repository";
 import { Incidence } from "../models/incidences.model";
-import NotFoundError from "../errors/notFound.error";
 
 //Get incidences by robotId
-export const getIncidencesByRobotId: RequestHandler = async (req, res) => {
+export const getIncidencesByRobotId: RequestHandler = async (req, res, next) => {
   try {
     const incidences: Incidence[] = await incidencesRepository.getByRobotId(req.params.robotId);
     res.status(200).json(incidences);
   } catch (err) {
-    res.status(500).send(err.message);
+    next(err);
   }
 };
 
 //Get not read incidences
-export const getIncidencesByReadStatus: RequestHandler = async (req, res) => {
+export const getIncidencesByReadStatus: RequestHandler = async (req, res, next) => {
   let status = req.query.readed;
   if (status !== "true" && status !== "false") {
     res.status(400).send("Invalid readed status");
@@ -24,12 +23,12 @@ export const getIncidencesByReadStatus: RequestHandler = async (req, res) => {
     const incidences: Incidence[] = await incidencesRepository.getByReadedStatus(status === "true");
     res.status(200).json(incidences);
   } catch (err) {
-    res.status(500).send(err.message);
+    next(err);
   }
 };
 
 //Mark an incidence as read or not read
-export const markIncidence: RequestHandler = async (req, res) => {
+export const markIncidence: RequestHandler = async (req, res, next) => {
   try {
     const incidenceId = req.params.incidenceId;
     const readed = req.params.readed;
@@ -37,25 +36,17 @@ export const markIncidence: RequestHandler = async (req, res) => {
     await incidencesRepository.update(incidenceId, readed === "true");
     res.status(200).send("Incidence status updated to " + readed);
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };
 
 //Delete an incidence
-export const deleteIncidence: RequestHandler = async (req, res) => {
+export const deleteIncidence: RequestHandler = async (req, res, next) => {
   try {
     await incidencesRepository.getById(req.params.incidenceId);
     await incidencesRepository.remove(req.params.incidenceId);
     res.status(200).send("Incidence deleted");
   } catch (err) {
-    if (err instanceof NotFoundError) {
-      res.status(404).send(err.message);
-    } else {
-      res.status(500).send(err.message);
-    }
+    next(err);
   }
 };

@@ -2,6 +2,7 @@ require("dotenv").config();
 import * as tokensRepository from "../repositories/tokens.repository";
 import * as robotsRepository from "../repositories/robots.repository";
 import * as companiesRepository from "../repositories/companies.repository";
+import * as incidencesService from "./incidences.service";
 import { Mower } from "../models/mowers.model";
 import { Token } from "../models/tokens.model";
 import { Robot } from "../models/robots.model";
@@ -18,8 +19,8 @@ export const updateRobots = async () => {
 
 export const updateRobotsByCompany = async (companyId: string) => {
   const token: Token = await tokensRepository.getByCompanyId(companyId);
-  const mowers: Mower[] = await getMowers(token.accessToken);
-  //const mowers: Mower[] = await getFakeMowers();
+  //const mowers: Mower[] = await getMowers(token.accessToken);
+  const mowers: Mower[] = getFakeMowers();
   await updateMowers(mowers);
 };
 
@@ -53,11 +54,12 @@ const createRobot = async (mower: Mower) => {
     clientId: null,
     assignedToClient: false,
   };
-
   await robotsRepository.create(robot);
 };
 
 const updateRobot = async (robot: Robot, mower: Mower) => {
+  await incidencesService.checkIncidence(robot, mower);
+
   robot.name = mower.name;
   robot.battery = mower.battery;
   robot.mode = mower.mode;
@@ -106,7 +108,7 @@ const mapResponseToMowers = (mowerResponse: any): Mower[] => {
 };
 
 const getFakeMowers = (): Mower[] => {
-  const fakeData = require("../../data/Response_data.json");
+  const fakeData = require("../../data/response_data_small.json");
   const mowers: Mower[] = mapResponseToMowers(fakeData);
   return mowers;
 };

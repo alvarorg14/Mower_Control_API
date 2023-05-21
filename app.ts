@@ -7,6 +7,9 @@ import reapirsRoutes from "./src/routes/repairs.routes";
 import companiesRoutes from "./src/routes/companies.routes";
 import employeesRoutes from "./src/routes/employees.routes";
 import tokensRoutes from "./src/routes/tokens.routes";
+import mowerErrorsRoutes from "./src/routes/mowerErrors.routes";
+import incidencesRoutes from "./src/routes/incidences.routes";
+
 import * as db from "./src/db/db";
 
 const bodyParser = require("body-parser");
@@ -23,6 +26,8 @@ app.use(reapirsRoutes);
 app.use(companiesRoutes);
 app.use(employeesRoutes);
 app.use(tokensRoutes);
+app.use(mowerErrorsRoutes);
+app.use(incidencesRoutes);
 
 db.init();
 

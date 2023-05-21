@@ -22,32 +22,6 @@ export const getCompanyById: RequestHandler = async (req, res, next) => {
   }
 };
 
-//Get a companu by CIF
-export const getCompanyByCIF: RequestHandler = async (req, res, next) => {
-  try {
-    const company = await companiesRepository.getByCIF(req.params.cif);
-    res.status(200).json(company);
-  } catch (err) {
-    next(err);
-  }
-};
-
-//Create a new company
-export const createCompany: RequestHandler = async (req, res, next) => {
-  const newCompany: Company = {
-    name: req.body.name,
-    CIF: req.body.cif,
-  };
-
-  try {
-    validateCompany(newCompany);
-    const company = await companiesRepository.create(newCompany);
-    res.status(201).json(company);
-  } catch (err) {
-    next(err);
-  }
-};
-
 //Update a company
 export const updateCompany: RequestHandler = async (req, res, next) => {
   const newCompany: Company = {

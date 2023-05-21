@@ -4,8 +4,6 @@ import * as auth from "./src/middleware/auth";
 
 import robotsRoutes from "./src/routes/robots.routes";
 import clientsRoutes from "./src/routes/clients.routes";
-import partsRoutes from "./src/routes/parts.routes";
-import reapirsRoutes from "./src/routes/repairs.routes";
 import companiesRoutes from "./src/routes/companies.routes";
 import employeesRoutes from "./src/routes/employees.routes";
 import tokensRoutes from "./src/routes/tokens.routes";
@@ -40,8 +38,6 @@ app.use(auth.verifyToken);
 
 app.use(robotsRoutes);
 app.use(clientsRoutes);
-app.use(partsRoutes);
-app.use(reapirsRoutes);
 app.use(companiesRoutes);
 app.use(employeesRoutes);
 app.use(tokensRoutes);

@@ -8,7 +8,9 @@ export type Robot = {
   state: string;
   errorCode: number;
   errorCodeTimestamp: number;
+  assigned: boolean;
+  modelId: string;
   clientId: string | null;
-  model: string;
-  assignedToClient: boolean;
+  employeeId: string | null;
+  companyId: string;
 };

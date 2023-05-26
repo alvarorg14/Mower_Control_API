@@ -37,7 +37,7 @@ export const create = async (newRobot: Robot): Promise<Robot> => {
 export const update = async (robot: Robot): Promise<Robot> => {
   const query =
     "UPDATE robots SET serialNumber = ?, name = ?, battery = ?, mode = ?, activity = ?," +
-    " state = ?, errorCode = ?, errorCodeTimestamp = ?, clientId = ?, model = ?, assignedToClient = ? WHERE robotId = ?";
+    " state = ?, errorCode = ?, errorCodeTimestamp = ?, clientId = ?, modelId = ?, assigned = ?, employeeId = ?, companyId = ? WHERE robotId = ?";
   await execute(query, [
     robot.serialNumber,
     robot.name,
@@ -48,16 +48,18 @@ export const update = async (robot: Robot): Promise<Robot> => {
     robot.errorCode,
     robot.errorCodeTimestamp,
     robot.clientId,
-    robot.model,
-    robot.assignedToClient,
+    robot.modelId,
+    robot.assigned,
+    robot.employeeId,
+    robot.companyId,
     robot.robotId,
   ]);
   return robot;
 };
 
 //Update the client id of a robot
-export const updateClientId = async (robotId: string, clientId: string, assignedToClient: boolean): Promise<Robot> => {
-  const query = "UPDATE robots SET clientId = ?, assignedToClient = ? WHERE robotId = ?";
-  await execute(query, [clientId, assignedToClient, robotId]);
+export const assignRobot = async (robotId: string, clientId: string, employeeId: string, assigned: boolean): Promise<Robot> => {
+  const query = "UPDATE robots SET clientId = ?, employeeId = ?, assigned = ? WHERE robotId = ?";
+  await execute(query, [clientId, employeeId, assigned, robotId]);
   return getRobotById(robotId);
 };

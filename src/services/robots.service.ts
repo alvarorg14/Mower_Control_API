@@ -3,11 +3,13 @@ import * as tokensRepository from "../repositories/tokens.repository";
 import * as robotsRepository from "../repositories/robots.repository";
 import * as companiesRepository from "../repositories/companies.repository";
 import * as incidencesService from "./incidences.service";
+import * as modelsRepository from "../repositories/models.repository";
 import { Mower } from "../models/mowers.model";
 import { Token } from "../models/tokens.model";
 import { Robot } from "../models/robots.model";
 import { Company } from "../models/companies.model";
 import NotFoundError from "../errors/notFound.error";
+import { Model } from "../models/models.model";
 const fetch = require("node-fetch");
 
 export const updateRobots = async () => {
@@ -21,17 +23,17 @@ export const updateRobotsByCompany = async (companyId: string) => {
   const token: Token = await tokensRepository.getByCompanyId(companyId);
   //const mowers: Mower[] = await getMowers(token.accessToken);
   const mowers: Mower[] = getFakeMowers();
-  await updateMowers(mowers);
+  await updateMowers(mowers, companyId);
 };
 
-const updateMowers = async (mowers: Mower[]) => {
+const updateMowers = async (mowers: Mower[], companyId: string) => {
   for (const mower of mowers) {
     try {
       const robot: Robot = await robotsRepository.getByIdOrSerialNumber(mower.id, mower.serialNumber);
       await updateRobot(robot, mower);
     } catch (err) {
       if (err instanceof NotFoundError) {
-        await createRobot(mower);
+        await createRobot(mower, companyId);
       } else {
         throw err;
       }
@@ -39,7 +41,9 @@ const updateMowers = async (mowers: Mower[]) => {
   }
 };
 
-const createRobot = async (mower: Mower) => {
+const createRobot = async (mower: Mower, companyId: string) => {
+  const modelId = await getMowerId(mower.model);
+
   const robot: Robot = {
     robotId: mower.id,
     serialNumber: mower.serialNumber,
@@ -50,9 +54,11 @@ const createRobot = async (mower: Mower) => {
     state: mower.state,
     errorCode: mower.errorCode,
     errorCodeTimestamp: mower.errorCodeTimestamp,
-    model: mower.model,
+    assigned: false,
+    modelId: modelId,
     clientId: null,
-    assignedToClient: false,
+    employeeId: null,
+    companyId: companyId,
   };
   await robotsRepository.create(robot);
 };
@@ -86,14 +92,19 @@ const getMowers = async (access_token: string): Promise<Mower[]> => {
   return mowers;
 };
 
+const getFakeMowers = (): Mower[] => {
+  const fakeData = require("../../data/response_data_small.json");
+  const mowers: Mower[] = mapResponseToMowers(fakeData);
+  return mowers;
+};
+
 const mapResponseToMowers = (mowerResponse: any): Mower[] => {
   const data = mowerResponse.data;
-
   const mowers: Mower[] = data.map((mower: any) => {
     return {
       id: mower.id,
       name: mower.attributes.system.name,
-      model: mower.attributes.system.model,
+      model: mapModelName(mower.attributes.system.model),
       serialNumber: mower.attributes.system.serialNumber,
       battery: mower.attributes.battery.batteryPercent || 0,
       mode: mower.attributes.mower.mode || "UNKNOWN",
@@ -107,8 +118,18 @@ const mapResponseToMowers = (mowerResponse: any): Mower[] => {
   return mowers;
 };
 
-const getFakeMowers = (): Mower[] => {
-  const fakeData = require("../../data/response_data_small.json");
-  const mowers: Mower[] = mapResponseToMowers(fakeData);
-  return mowers;
+const mapModelName = (model: string): string => {
+  const nameParts: string[] = model.split(" ");
+  if (nameParts.length == 4) {
+    return nameParts[2] + " " + nameParts[3];
+  } else if (nameParts.length == 3) {
+    return nameParts[2];
+  } else {
+    return "UNKNOWN";
+  }
+};
+
+const getMowerId = async (modelName: string): Promise<string> => {
+  const model: Model = await modelsRepository.getByName(modelName);
+  return model.modelId as string;
 };

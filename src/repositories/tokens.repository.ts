@@ -21,7 +21,7 @@ export const getById = async (employeeId: string): Promise<Token> => {
 export const getByCompanyId = async (companyId: string): Promise<Token> => {
   const query =
     "SELECT accessToken FROM tokens JOIN employees ON tokens.employeeId = employees.employeeId" +
-    " WHERE employees.role = 'admin' AND employees.companyId = 'bf968abb-fdcc-4a2e-8f3c-fd9df8cf4191'";
+    " WHERE employees.role = 'admin' AND employees.companyId = ?";
   const results = await execute<Token[]>(query, [companyId]);
   if (results.length === 0) throw new NotFoundError("Company token not found");
   if (results.length > 1) throw new Error("More than one token found for the company with id " + companyId);

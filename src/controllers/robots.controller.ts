@@ -1,36 +1,11 @@
 import { RequestHandler } from "express";
-import { Robot } from "../models/robots.model";
 import * as robotsRepository from "../repositories/robots.repository";
 import * as robotsService from "../services/robots.service";
-import { checkCompany } from "../helpers/security.helper";
 
 export const getRobots: RequestHandler = async (req, res, next) => {
   try {
     const robots = await robotsRepository.getAllRobots();
     res.status(200).json(robots);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const createRobot: RequestHandler = async (req, res, next) => {
-  const newRobot: Robot = {
-    serialNumber: req.body.serialNumber,
-    name: req.body.name,
-    battery: req.body.battery,
-    mode: req.body.mode,
-    activity: req.body.activity,
-    state: req.body.state,
-    errorCode: req.body.errorCode,
-    errorCodeTimestamp: req.body.errorCodeTimestamp,
-    clientId: req.body.clientId,
-    model: req.body.model,
-    assignedToClient: req.body.assignedToClient,
-  };
-
-  try {
-    const robot = await robotsRepository.create(newRobot);
-    res.status(201).json(robot);
   } catch (err) {
     next(err);
   }
@@ -50,7 +25,6 @@ export const updateRobotsByCompany: RequestHandler = async (req, res, next) => {
   const companyId = req.params.companyId;
 
   try {
-    await checkCompany(companyId, req.companyId);
     await robotsService.updateRobotsByCompany(companyId);
     res.set("Content-Type", "text/plain");
     res.status(200).send(`Robots updated successfully for company ${companyId}`);
@@ -62,9 +36,10 @@ export const updateRobotsByCompany: RequestHandler = async (req, res, next) => {
 export const assignRobotToClient: RequestHandler = async (req, res, next) => {
   const robotId = req.params.robotId;
   const clientId = req.body.clientId;
+  const employeeId = req.body.employeeId;
 
   try {
-    await robotsRepository.updateClientId(robotId, clientId, true);
+    await robotsRepository.assignRobot(robotId, clientId, employeeId, true);
     res.set("Content-Type", "text/plain");
     res.status(200).send(`Robot ${robotId} assigned to client ${clientId}`);
   } catch (err) {

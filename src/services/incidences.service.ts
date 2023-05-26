@@ -8,7 +8,7 @@ import NotFoundError from "../errors/notFound.error";
 import * as incidencesRepository from "../repositories/incidences.repository";
 
 export const checkIncidence = async (robot: Robot, mower: Mower): Promise<void> => {
-  if (mower.errorCode != 0 && robot.errorCode != mower.errorCode && robot.assignedToClient) {
+  if (mower.errorCode != 0 && robot.errorCode != mower.errorCode && robot.assigned) {
     await createIncidence(robot, mower);
   }
 };

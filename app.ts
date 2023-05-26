@@ -10,6 +10,7 @@ import tokensRoutes from "./src/routes/tokens.routes";
 import mowerErrorsRoutes from "./src/routes/mowerErrors.routes";
 import incidencesRoutes from "./src/routes/incidences.routes";
 import loginRoutes from "./src/routes/login.routes";
+import modelsRoutes from "./src/routes/models.routes";
 
 import * as db from "./src/db/db";
 import NotFoundError from "./src/errors/notFound.error";
@@ -44,6 +45,7 @@ app.use(tokensRoutes);
 app.use(mowerErrorsRoutes);
 app.use(incidencesRoutes);
 app.use(loginRoutes);
+app.use(modelsRoutes);
 
 //Global error handler
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -19,6 +19,7 @@ export const verifyToken = async (request: Request, response: Response, next: Ne
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as jwt.JwtPayload;
     request.userId = decoded.id;
     request.companyId = decoded.companyId;
+    request.role = decoded.role;
     next();
   } catch (error) {
     return response.status(401).json({ message: "Unauthorized" });

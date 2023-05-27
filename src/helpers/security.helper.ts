@@ -1,11 +1,29 @@
 import ForbiddenError from "../errors/forbidden.error";
-import UnauthorizedError from "../errors/unauthorized.error";
+import { Robot } from "../models/robots.model";
+import { Role } from "../models/employees.model";
+import * as robotsRepository from "../repositories/robots.repository";
 
-export const checkCompany = async (reqCompanyId: string, companyId: string | undefined) => {
-  if (!companyId) {
-    throw new UnauthorizedError("No company provided in token");
+export const checkRobotIsFromCompanyOrEmployee = async (robotId: string, companyId: any, userId: any, role: any) => {
+  try {
+    const robot: Robot = await robotsRepository.getById(robotId);
+    if (role === Role.STANDARD && robot.employeeId !== userId) {
+      throw new ForbiddenError("Unauthorized");
+    } else if (role === Role.ADMIN && robot.companyId !== companyId) {
+      throw new ForbiddenError("Forbidden");
+    }
+  } catch (err) {
+    throw new ForbiddenError("Forbidden");
   }
-  if (reqCompanyId !== companyId) {
-    throw new ForbiddenError("You are not allowed to modify this company");
+};
+
+export const checkCompany = async (companyId: string, requestCompanyId: any) => {
+  if (companyId !== requestCompanyId) {
+    throw new ForbiddenError("Forbidden");
+  }
+};
+
+export const checkEmployee = async (employeeId: string, requestCompanyId: any) => {
+  if (employeeId !== requestCompanyId) {
+    throw new ForbiddenError("Forbidden");
   }
 };

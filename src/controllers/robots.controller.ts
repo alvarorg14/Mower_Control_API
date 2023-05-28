@@ -51,7 +51,6 @@ export const updateRobotsByCompany: RequestHandler = async (req, res, next) => {
   const companyId = req.params.companyId;
 
   try {
-    await checkCompany(companyId, req.companyId);
     await robotsService.updateRobotsByCompany(companyId);
     res.set("Content-Type", "text/plain");
     res.status(200).send(`Robots updated successfully for company ${companyId}`);

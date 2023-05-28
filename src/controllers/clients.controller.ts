@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { Client, validateClient } from "../models/clients.model";
 import * as clientsRepository from "../repositories/clients.repository";
-import { checkClientIsFromCompany, checkCompany, checkEmployeeIsFromCompany } from "../helpers/security.helper";
+import { checkClientIsFromCompany, checkCompany } from "../helpers/security.helper";
 
 //Get a client by id
 export const getClientById: RequestHandler = async (req, res, next) => {

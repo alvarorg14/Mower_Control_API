@@ -1,22 +1,25 @@
 import { RequestHandler } from "express";
 import { Client, validateClient } from "../models/clients.model";
 import * as clientsRepository from "../repositories/clients.repository";
+import { checkCompany, checkEmployeeIsFromCompany } from "../helpers/security.helper";
 
-//Get all clients
-export const getClients: RequestHandler = async (req, res, next) => {
+//Get a client by id
+export const getClientById: RequestHandler = async (req, res, next) => {
   try {
-    const clients = await clientsRepository.getAll();
-    res.status(200).json(clients);
+    await checkEmployeeIsFromCompany(req.params.id, req.companyId);
+    const client = await clientsRepository.getById(req.params.id);
+    res.status(200).json(client);
   } catch (err) {
     next(err);
   }
 };
 
-//Get a client by id
-export const getClientById: RequestHandler = async (req, res, next) => {
+//Get clients by company id
+export const getClientsByCompanyId: RequestHandler = async (req, res, next) => {
   try {
-    const client = await clientsRepository.getById(req.params.id);
-    res.status(200).json(client);
+    await checkCompany(req.params.companyId, req.companyId);
+    const clients = await clientsRepository.getByCompanyId(req.params.companyId);
+    res.status(200).json(clients);
   } catch (err) {
     next(err);
   }
@@ -28,6 +31,7 @@ export const createClient: RequestHandler = async (req, res, next) => {
     name: req.body.name,
     address: req.body.address,
     phoneNumber: req.body.phoneNumber,
+    companyId: req.companyId as string,
   };
 
   try {
@@ -45,6 +49,7 @@ export const updateClient: RequestHandler = async (req, res, next) => {
     name: req.body.name,
     address: req.body.address,
     phoneNumber: req.body.phoneNumber,
+    companyId: req.companyId as string,
   };
 
   try {

@@ -5,21 +5,13 @@ import * as companiesRepository from "../repositories/companies.repository";
 import { generateUsername, reformatName } from "../helpers/username.helper";
 import { generatePassword } from "../helpers/password.helper";
 import ValidationError from "../errors/validation.error";
+import { checkCompany, checkEmployeeIsFromCompany } from "../helpers/security.helper";
 const bcrypt = require("bcryptjs");
-
-//Get all employees
-export const getEmployees: RequestHandler = async (req, res, next) => {
-  try {
-    const employees = await employeesRepository.getAll();
-    res.status(200).json(employees);
-  } catch (err) {
-    next(err);
-  }
-};
 
 //Get an employee by id
 export const getEmployeeById: RequestHandler = async (req, res, next) => {
   try {
+    await checkEmployeeIsFromCompany(req.params.id, req.companyId as string);
     const employee = await employeesRepository.getById(req.params.id);
     res.status(200).json(employee);
   } catch (err) {
@@ -30,6 +22,7 @@ export const getEmployeeById: RequestHandler = async (req, res, next) => {
 //Get employees by companyId
 export const getEmployeesByCompanyId: RequestHandler = async (req, res, next) => {
   try {
+    await checkCompany(req.params.companyId, req.companyId as string);
     const employees = await employeesRepository.getByCompanyId(req.params.companyId);
     res.status(200).json(employees);
   } catch (err) {
@@ -86,10 +79,11 @@ export const updateEmployee: RequestHandler = async (req, res, next) => {
     username: req.body.username,
     password: req.body.password,
     role: req.body.role,
-    companyId: req.body.companyId,
+    companyId: req.companyId as string,
   };
 
   try {
+    await checkEmployeeIsFromCompany(req.params.id, req.companyId as string);
     await companiesRepository.getById(updatedEmployee.companyId);
     await employeesRepository.getById(req.params.id);
     validateEmployee(updatedEmployee);
@@ -104,6 +98,7 @@ export const updateEmployee: RequestHandler = async (req, res, next) => {
 //Delete an employee
 export const deleteEmployee: RequestHandler = async (req, res, next) => {
   try {
+    await checkEmployeeIsFromCompany(req.params.id, req.companyId as string);
     await employeesRepository.getById(req.params.id);
     await employeesRepository.remove(req.params.id);
     res.sendStatus(204);

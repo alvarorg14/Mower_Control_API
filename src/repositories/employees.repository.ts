@@ -4,13 +4,6 @@ import { execute } from "../db/db";
 import NotFoundError from "../errors/notFound.error";
 import DuplicationError from "../errors/duplication.error";
 
-//Get all employees from the database
-export const getAll = async (): Promise<Employee[]> => {
-  const query = "SELECT * FROM employees";
-  const results = await execute<Employee[]>(query, []);
-  return results;
-};
-
 //Get an employee by id
 export const getById = async (employeeId: string): Promise<Employee> => {
   const query = "SELECT * FROM employees WHERE employeeId = ?";

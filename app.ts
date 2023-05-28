@@ -24,6 +24,7 @@ declare global {
     interface Request {
       userId?: string;
       companyId?: string;
+      role?: string;
     }
   }
 }

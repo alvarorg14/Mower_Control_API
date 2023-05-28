@@ -22,6 +22,9 @@ INSERT INTO models
 VALUES('a79c5c44-c955-4408-bf57-188b962442d5', '415X');
 INSERT INTO models
 (modelId, name)
+VALUES('8eb76a90-fd96-418a-9fa9-6985eae38a19', '420');
+INSERT INTO models
+(modelId, name)
 VALUES('9cf0ef14-d51f-4357-9ef1-f281f9869984', '430X');
 INSERT INTO models
 (modelId, name)
@@ -37,7 +40,16 @@ INSERT INTO models
 VALUES('f614b0f3-0c62-4ee1-9b3b-2c02fddf2806', '450X NERA');
 INSERT INTO models
 (modelId, name)
+VALUES('0556f3a4-ff64-48d9-89b2-c3f0abf78e08', '520');
+INSERT INTO models
+(modelId, name)
 VALUES('b26f62ea-7d00-4827-bc0a-b8655b93119d', '535 AWD');
+INSERT INTO models
+(modelId, name)
+VALUES('7c0952ea-7ffc-4af5-b8c9-e03c2e525fff', '550');
+INSERT INTO models
+(modelId, name)
+VALUES('a7f6b789-5d77-438e-9a69-3ef8d333855d', 'Aspire™ R4');
 INSERT INTO models
 (modelId, name)
 VALUES('c2728d9b-803b-4316-b2b9-58f608710a64', 'UNKNOWN');

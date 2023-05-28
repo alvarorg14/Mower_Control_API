@@ -2,15 +2,8 @@ import { Robot } from "../models/robots.model";
 import { execute } from "../db/db";
 import NotFoundError from "../errors/notFound.error";
 
-//Get all robots
-export const getAllRobots = async (): Promise<Robot[]> => {
-  const query = "SELECT * FROM robots";
-  const results = await execute<Robot[]>(query, []);
-  return results;
-};
-
 //Get a robot by id
-export const getRobotById = async (robotId: string): Promise<Robot> => {
+export const getById = async (robotId: string): Promise<Robot> => {
   const query = "SELECT * FROM robots WHERE robotId = ?";
   const results = await execute<Robot[]>(query, [robotId]);
   if (results.length === 0) throw new NotFoundError("Robot not found");
@@ -24,6 +17,20 @@ export const getByIdOrSerialNumber = async (robotId: string, serialNumber: numbe
   if (results.length === 0) throw new NotFoundError("Robot not found");
   if (results.length > 1) throw new Error("More than one robot found, serialNumber not equal to id");
   return results[0];
+};
+
+//Get robots by company id
+export const getByCompany = async (companyId: string): Promise<Robot[]> => {
+  const query = "SELECT * FROM robots WHERE companyId = ?";
+  const results = await execute<Robot[]>(query, [companyId]);
+  return results;
+};
+
+//Get robots by employee id
+export const getByEmployee = async (employeeId: string): Promise<Robot[]> => {
+  const query = "SELECT * FROM robots WHERE employeeId = ?";
+  const results = await execute<Robot[]>(query, [employeeId]);
+  return results;
 };
 
 //Create a new robot
@@ -57,9 +64,9 @@ export const update = async (robot: Robot): Promise<Robot> => {
   return robot;
 };
 
-//Update the client id of a robot
+//Assign a robot to a client and employee
 export const assignRobot = async (robotId: string, clientId: string, employeeId: string, assigned: boolean): Promise<Robot> => {
   const query = "UPDATE robots SET clientId = ?, employeeId = ?, assigned = ? WHERE robotId = ?";
   await execute(query, [clientId, employeeId, assigned, robotId]);
-  return getRobotById(robotId);
+  return getById(robotId);
 };

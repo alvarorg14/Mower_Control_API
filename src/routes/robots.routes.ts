@@ -4,8 +4,10 @@ import { verifyAdminRole } from "../middleware/auth";
 
 const api: Router = express.Router();
 
-api.get("/robots", RobotsController.getRobots);
+api.get("/robots/:robotId", RobotsController.getRobotById);
+api.get("/robots/company/:companyId", verifyAdminRole, RobotsController.getRobotsByCompany);
+api.get("/robots/employee/:employeeId", RobotsController.getRobotsByEmployee);
 api.post("/robots/company/:companyId/refresh", verifyAdminRole, RobotsController.updateRobotsByCompany);
-api.post("/robots/:robotId/assign", RobotsController.assignRobotToClient);
+api.post("/robots/:robotId/assign", verifyAdminRole, RobotsController.assignRobotToClient);
 
 export default api;

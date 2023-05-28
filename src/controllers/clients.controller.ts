@@ -1,12 +1,12 @@
 import { RequestHandler } from "express";
 import { Client, validateClient } from "../models/clients.model";
 import * as clientsRepository from "../repositories/clients.repository";
-import { checkCompany, checkEmployeeIsFromCompany } from "../helpers/security.helper";
+import { checkClientIsFromCompany, checkCompany, checkEmployeeIsFromCompany } from "../helpers/security.helper";
 
 //Get a client by id
 export const getClientById: RequestHandler = async (req, res, next) => {
   try {
-    await checkEmployeeIsFromCompany(req.params.id, req.companyId);
+    await checkClientIsFromCompany(req.params.id, req.companyId);
     const client = await clientsRepository.getById(req.params.id);
     res.status(200).json(client);
   } catch (err) {
@@ -53,6 +53,7 @@ export const updateClient: RequestHandler = async (req, res, next) => {
   };
 
   try {
+    await checkClientIsFromCompany(req.params.id, req.companyId);
     await clientsRepository.getById(req.params.id);
     validateClient(newClient);
     newClient.clientId = req.params.id;
@@ -66,6 +67,7 @@ export const updateClient: RequestHandler = async (req, res, next) => {
 //Delete a client
 export const deleteClient: RequestHandler = async (req, res, next) => {
   try {
+    await checkClientIsFromCompany(req.params.id, req.companyId);
     await clientsRepository.getById(req.params.id);
     await clientsRepository.remove(req.params.id);
     res.set("Content-Type", "text/plain");

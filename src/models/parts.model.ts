@@ -7,8 +7,7 @@ export type Part = {
   reference: string;
   name: string;
   description: string;
-  stock: number;
-  price: number;
+  defaultPrice: number;
 };
 
 //Validate a part
@@ -17,8 +16,7 @@ export const validatePart = (part: Part) => {
     reference: Joi.string().min(3).max(50).required(),
     name: Joi.string().min(3).max(50).required(),
     description: Joi.string().min(3).max(255).required(),
-    stock: Joi.number().min(0).required(),
-    price: Joi.number().min(0).required(),
+    defaultPrice: Joi.number().required(),
   });
   let { error } = schema.validate(part);
   if (error) {

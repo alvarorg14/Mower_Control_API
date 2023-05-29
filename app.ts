@@ -11,6 +11,7 @@ import mowerErrorsRoutes from "./src/routes/mowerErrors.routes";
 import incidencesRoutes from "./src/routes/incidences.routes";
 import loginRoutes from "./src/routes/login.routes";
 import modelsRoutes from "./src/routes/models.routes";
+import partsRoutes from "./src/routes/parts.routes";
 
 import * as db from "./src/db/db";
 import NotFoundError from "./src/errors/notFound.error";
@@ -34,7 +35,8 @@ const bodyParser = require("body-parser");
 const app = express();
 
 //app.use(express.json());
-app.use(bodyParser.json());
+//Extend the limit of the body parser to 50mb
+app.use(bodyParser.json({ limit: "50mb", extended: true }));
 
 app.use(auth.verifyToken);
 
@@ -47,6 +49,7 @@ app.use(mowerErrorsRoutes);
 app.use(incidencesRoutes);
 app.use(loginRoutes);
 app.use(modelsRoutes);
+app.use(partsRoutes);
 
 //Global error handler
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {

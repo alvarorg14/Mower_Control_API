@@ -1,0 +1,35 @@
+#Docker compose for the rest API and mysql database
+version: '3.5'
+services:
+  restapi:
+    container_name: restapi
+    build: 
+      context: .
+      args:
+        MYSQL_DATABASE: ${MYSQL_DB}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_PORT: ${MYSQL_PORT}
+        MYSQL_HOST: ${MYSQL_HOST}
+        HUSQVARNA_CLIENT_ID: ${HUSQVARNA_CLIENT_ID}
+        HUSQVARNA_OAUTH_URL: ${HUSQVARNA_OAUTH_URL}
+        HUSQVARNA_API_URL: ${HUSQVARNA_API_URL}
+        JWT_SECRET: ${JWT_SECRET}
+        JWT_TOKEN_EXPIRATION: ${JWT_TOKEN_EXPIRATION}   
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-db
+    links:
+      - mysql-db
+  mysql-db:
+    container_name: mysql-db
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}

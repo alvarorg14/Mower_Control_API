@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import * as companiesRepository from "../repositories/companies.repository";
 import * as employeesRepository from "../repositories/employees.repository";
+import * as partsService from "../services/parts.service";
 import { Company, validateCompany } from "../models/companies.model";
 import { Employee, validateEmployee, Role } from "../models/employees.model";
 import { generateAccessToken } from "../helpers/jwt.helper";
@@ -32,7 +33,8 @@ export const signUpCompany: RequestHandler = async (req, res, next) => {
     validateEmployee(newEmployee);
     const employee = await employeesRepository.create(newEmployee);
     const token = generateAccessToken(employee);
-    res.status(201).json({ id: employee.employeeId, token: token });
+    await partsService.initializePartsForCompany(company.companyId as string);
+    await res.status(201).json({ id: employee.employeeId, token: token });
   } catch (err) {
     await removeCompanyIfEmployeeCreationFails(company!);
     next(err);

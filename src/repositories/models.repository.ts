@@ -3,6 +3,13 @@ import { Model } from "../models/models.model";
 import { execute } from "../db/db";
 import NotFoundError from "../errors/notFound.error";
 
+//Get all models
+export const getAll = async (): Promise<Model[]> => {
+  const query = "SELECT * FROM models";
+  const results = await execute<Model[]>(query, []);
+  return results;
+};
+
 //Get model by id
 export const getById = async (id: string): Promise<Model> => {
   const query = "SELECT * FROM models WHERE modelId = ?";

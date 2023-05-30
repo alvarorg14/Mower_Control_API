@@ -2,9 +2,8 @@ CREATE TABLE parts (
 	partId varchar(100) NOT NULL,
 	reference varchar(100) NOT NULL,
 	name varchar(100) NOT NULL,
-	description varchar(100) NOT NULL,
-	stock INT NOT NULL,
-	price DOUBLE NOT NULL,
+	description varchar(500) NOT NULL,
+	defaultPrice DOUBLE NOT NULL,
 	CONSTRAINT parts_pk PRIMARY KEY (partId),
 	CONSTRAINT parts_un UNIQUE KEY (reference)
 )

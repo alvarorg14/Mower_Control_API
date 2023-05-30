@@ -42,7 +42,7 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           user: ${{ secrets.DEPLOY_USER }}
           command: |
-            docker stop mower_control_api
-            docker rm mower_control_api
-            docker pull ghcr.io/alvarorg14/mower_control_api:latest
-            docker run -d --name mower_control_api -p 8080:8080 ghcr.io/alvarorg14/mower_control_api:latest
+            sudo docker stop mower_control_api
+            sudo docker rm mower_control_api
+            sudo docker pull ghcr.io/alvarorg14/mower_control_api:latest
+            sudo docker run -d --name mower_control_api -p 8080:8080 ghcr.io/alvarorg14/mower_control_api:latest

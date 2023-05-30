@@ -9,6 +9,14 @@ export const getAll = async (): Promise<Part[]> => {
   return await execute<Part[]>(query, []);
 };
 
+//Get part by id
+export const getById = async (partId: string): Promise<Part> => {
+  const query = "SELECT * FROM parts WHERE partId = ?";
+  const results = await execute<Part[]>(query, [partId]);
+  if (results.length === 0) throw new NotFoundError("Part not found");
+  return results[0];
+};
+
 //Get part by reference
 export const getByReference = async (reference: string): Promise<Part> => {
   const query = "SELECT * FROM parts WHERE reference = ?";

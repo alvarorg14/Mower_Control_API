@@ -4,6 +4,7 @@ CREATE TABLE companyParts (
     price DOUBLE NOT NULL,
     stock INT NOT NULL,
     location varchar(100) NOT NULL,
+    defaultPrice boolean NOT NULL,
     CONSTRAINT companyParts_pk PRIMARY KEY (companyId, partId),
     CONSTRAINT companyParts_companies_FK FOREIGN KEY (companyId) REFERENCES companies(companyId),
     CONSTRAINT companyParts_parts_FK FOREIGN KEY (partId) REFERENCES parts(partId)

@@ -74,6 +74,7 @@ export const initializePartsForCompany = async (companyId: string): Promise<void
       price: part.defaultPrice,
       stock: 0,
       location: "DEFAULT",
+      defaultPrice: true,
     };
     await companyPartsRepository.create(partForCompany);
   }

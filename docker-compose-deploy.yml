@@ -1,0 +1,20 @@
+version: '3.5'
+services:
+  restapi:
+    image: ghcr.io/alvarorg14/Mower_Control_API/Mower_Control_API:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-db
+    links:
+      - mysql-db
+  mysql-db:
+    container_name: mysql-db
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}

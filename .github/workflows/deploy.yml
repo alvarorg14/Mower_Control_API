@@ -1,0 +1,32 @@
+name: Deploy for Mower Control API
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-push-image:
+    name: Build and push Docker image of Rest API
+    runs-on: ubuntu-latest
+    env:
+      MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_DB: ${{ secrets.MYSQL_DB }}
+      MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+      HUSQVARNA_CLIENT_ID: ${{ secrets.HUSQVARNA_CLIENT_ID }}
+      HUSQVARNA_OAUTH_URL: ${{ secrets.HUSQVARNA_OAUTH_URL }}
+      HUSQVARNA_API_URL: ${{ secrets.HUSQVARNA_API_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_TOKEN_EXPIRATION: ${{ secrets.JWT_TOKEN_EXPIRATION }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: alvarorg14/Mower_Control_API
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ghcr.io
+          buildargs: MYSQL_HOST,MYSQL_USER,MYSQL_PASSWORD,MYSQL_DB,MYSQL_PORT,HUSQVARNA_CLIENT_ID,HUSQVARNA_OAUTH_URL,HUSQVARNA_API_URL,JWT_SECRET,JWT_TOKEN_EXPIRATION
+          workdir: .

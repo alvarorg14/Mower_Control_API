@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   restapi:
-    image: ghcr.io/alvarorg14/Mower_Control_API/Mower_Control_API:latest
+    image: ghcr.io/alvarorg14/mower_control_api:latest
     ports:
       - "8080:8080"
     depends_on:

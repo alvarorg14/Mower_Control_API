@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 import * as auth from "./src/middleware/auth";
 
@@ -33,6 +34,8 @@ declare global {
 const bodyParser = require("body-parser");
 
 const app = express();
+
+app.use(cors());
 
 //app.use(express.json());
 //Extend the limit of the body parser to 50mb

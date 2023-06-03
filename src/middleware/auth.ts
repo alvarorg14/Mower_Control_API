@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { Role } from "../models/employees.model";
 
-const excludedPaths = ["/login", "/signup", "/companies"];
+const excludedPaths = ["/login", "/signup", "/companies", "/parts/initialize"];
 
 export const verifyToken = async (request: Request, response: Response, next: NextFunction) => {
   if (excludedPaths.includes(request.path)) {

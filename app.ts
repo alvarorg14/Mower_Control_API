@@ -59,17 +59,17 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
   console.log(err);
 
   if (err instanceof NotFoundError) {
-    res.status(404).send(err.message);
+    res.status(404).json({ code: 404, reason: err.message });
   } else if (err instanceof ValidationError) {
-    res.status(400).send(err.message);
+    res.status(400).json({ code: 400, reason: err.message });
   } else if (err instanceof DuplicationError) {
-    res.status(409).send(err.message);
+    res.status(409).json({ code: 409, reason: err.message });
   } else if (err instanceof UnauthorizedError) {
-    res.status(401).send(err.message);
+    res.status(401).json({ code: 401, reason: err.message });
   } else if (err instanceof ForbiddenError) {
-    res.status(403).send(err.message);
+    res.status(403).json({ code: 403, reason: err.message });
   } else {
-    res.status(500).send(err.message);
+    res.status(500).json({ code: 500, reason: err.message });
   }
 });
 

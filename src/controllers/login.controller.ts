@@ -59,7 +59,7 @@ export const login: RequestHandler = async (req, res, next) => {
     }
 
     const token = generateAccessToken(employee);
-    res.status(200).json({ id: employee.employeeId, token: token });
+    res.status(200).json({ employeeId: employee.employeeId, companyId: employee.companyId, token: token });
   } catch (err) {
     next(err);
   }

@@ -12,9 +12,9 @@ export type Client = {
 //Validate a client
 export const validateClient = (client: Client) => {
   const schema = Joi.object({
-    name: Joi.string().min(3).max(30).required(),
+    name: Joi.string().min(3).max(40).required(),
     address: Joi.string().min(3).max(50).required(),
-    phoneNumber: Joi.string().min(9).max(9).required(),
+    phoneNumber: Joi.number().required(),
     companyId: Joi.required(),
   });
 

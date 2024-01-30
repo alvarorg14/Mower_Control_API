@@ -93,7 +93,7 @@ const getMowers = async (access_token: string): Promise<Mower[]> => {
 };
 
 const getFakeMowers = (): Mower[] => {
-  const fakeData = require("../../data/response_data_small.json");
+  const fakeData = require("../../data/Response_Data.json");
   const mowers: Mower[] = mapResponseToMowers(fakeData);
   return mowers;
 };

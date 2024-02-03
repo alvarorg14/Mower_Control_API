@@ -8,7 +8,7 @@ import UnauthorizedError from "../errors/unauthorized.error";
 const bcrypt = require("bcryptjs");
 
 export const signUpCompany: RequestHandler = async (req, res, next) => {
-  const { companyName, cif, username, password, name } = req.body;
+  const { companyName, cif, username, password, name, surname1, surname2 } = req.body;
   //TODO: validate password
 
   let company: Company;
@@ -24,6 +24,8 @@ export const signUpCompany: RequestHandler = async (req, res, next) => {
     const encryptedPassword = await bcrypt.hash(password, 10);
     const newEmployee: Employee = {
       name: name,
+      surname1: surname1,
+      surname2: surname2,
       username: username,
       password: encryptedPassword,
       role: Role.ADMIN,

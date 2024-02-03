@@ -14,7 +14,6 @@ export const generatePassword = (): string => {
 
   // Check if all conditions are satisfied
   if (password.match(/[a-z]/g) && password.match(/[A-Z]/g) && password.match(/[0-9]/g)) {
-    console.log(password);
     return password;
   } else {
     // If not, recursively generate a new password

@@ -4,6 +4,8 @@ import ValidationError from "../errors/validation.error";
 export type Employee = {
   employeeId?: string;
   name: string;
+  surname1: string;
+  surname2: string;
   username: string;
   password: string;
   role: Role;
@@ -26,6 +28,8 @@ export const validateEmployee = (employee: Employee) => {
 
 export const employeeSchema = Joi.object({
   name: Joi.string().min(3).max(50).required(),
+  surname1: Joi.string().min(3).max(50).required(),
+  surname2: Joi.string().min(3).max(50),
   username: Joi.string().min(3).max(50).required(),
   password: Joi.required(),
   role: Joi.string().valid(Role.ADMIN, Role.STANDARD).required(),

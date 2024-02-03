@@ -1,6 +1,8 @@
 CREATE TABLE employees (
 	employeeId varchar(100) NOT NULL,
 	name varchar(100) NOT NULL,
+	surname1 varchar(100) NOT NULL,
+	surname2 varchar(100),
 	username varchar(100) NOT NULL,
 	password varchar(100) NOT NULL,
 	role varchar(100) NOT NULL,

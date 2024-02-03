@@ -5,14 +5,16 @@ export const generateUsername = async (name: string, surname1: string, surname2:
 
   try {
     await employeesRepository.getByUsername(username);
+    if (surname2 === null || surname2 === undefined || surname2.trim() === "") {
+      let i = 1;
+      username = username + i;
+      while (await employeesRepository.getByUsername(username)) {
+        i++;
+        username = username.slice(0, -1) + i;
+      }
+    }
     username = username + surname2.toLowerCase().charAt(0);
     await employeesRepository.getByUsername(username);
-    let i = 1;
-    username = username + i;
-    while (await employeesRepository.getByUsername(username)) {
-      i++;
-      username = username.slice(0, -1) + i;
-    }
     return username;
   } catch (err) {
     return username;

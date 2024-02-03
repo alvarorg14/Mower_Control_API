@@ -2,10 +2,9 @@ import { RequestHandler } from "express";
 import { Employee, validateEmployee, Role } from "../models/employees.model";
 import * as employeesRepository from "../repositories/employees.repository";
 import * as companiesRepository from "../repositories/companies.repository";
-import { generateUsername, reformatName } from "../helpers/username.helper";
-import { generatePassword } from "../helpers/password.helper";
 import ValidationError from "../errors/validation.error";
 import { checkCompany, checkEmployeeIsFromCompany } from "../helpers/security.helper";
+import * as employeesService from "../services/employees.service";
 const bcrypt = require("bcryptjs");
 
 //Get an employee by id
@@ -31,24 +30,10 @@ export const getEmployeesByCompanyId: RequestHandler = async (req, res, next) =>
 };
 
 //Create a new employee
-export const createEmployee: RequestHandler = async (req, res, next) => {
+export const createEmployeeForCompany: RequestHandler = async (req, res, next) => {
   try {
-    const username = await generateUsername(req.body.name, req.body.surname1, req.body.surname2);
-    const name = reformatName(req.body.name, req.body.surname1, req.body.surname2);
-    const password = generatePassword();
-    const encryptedPassword = await bcrypt.hash(password, 10);
-
-    const newEmployee: Employee = {
-      name: name,
-      username: username,
-      password: encryptedPassword,
-      role: Role.STANDARD,
-      companyId: req.companyId as string,
-    };
-
-    validateEmployee(newEmployee);
-    const employee = await employeesRepository.create(newEmployee);
-    employee.password = password;
+    await checkCompany(req.params.id, req.companyId as string);
+    const employee = await employeesService.createEmployeeForCompany(req.body.name, req.body.surname1, req.body.surname2, req.params.id);
     res.status(201).json(employee);
   } catch (err) {
     next(err);
@@ -76,6 +61,8 @@ export const updatePassword: RequestHandler = async (req, res, next) => {
 export const updateEmployee: RequestHandler = async (req, res, next) => {
   const updatedEmployee: Employee = {
     name: req.body.name,
+    surname1: req.body.surname1,
+    surname2: req.body.surname2,
     username: req.body.username,
     password: req.body.password,
     role: req.body.role,

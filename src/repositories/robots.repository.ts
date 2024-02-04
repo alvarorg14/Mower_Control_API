@@ -1,4 +1,4 @@
-import { Robot } from "../models/robots.model";
+import { Robot, RobotComplete } from "../models/robots.model";
 import { execute } from "../db/db";
 import NotFoundError from "../errors/notFound.error";
 
@@ -20,10 +20,82 @@ export const getByIdOrSerialNumber = async (robotId: string, serialNumber: numbe
 };
 
 //Get robots by company id
-export const getByCompany = async (companyId: string): Promise<Robot[]> => {
-  const query = "SELECT * FROM robots WHERE companyId = ?";
-  const results = await execute<Robot[]>(query, [companyId]);
-  return results;
+export const getByCompany = async (companyId: string, assigned?: string): Promise<RobotComplete[]> => {
+  let query = `
+    SELECT 
+      robots.*, 
+      clients.clientId, 
+      clients.name AS clientName, 
+      clients.address AS clientAddress, 
+      clients.phoneNumber AS clientPhoneNumber, 
+      clients.companyId AS clientCompanyId,
+      models.modelId AS modelId,
+      models.name AS  modelName,
+      employees.employeeId AS employeeId,
+      employees.name AS employeeName,
+      employees.surname1 AS employeeSurname1,
+      employees.surname2 AS employeeSurname2,
+      employees.username AS employeeUsername,
+      employees.password AS employeePassword,
+      employees.role AS employeeRole,
+      employees.companyId AS employeeCompanyId
+    FROM 
+      robots 
+    LEFT JOIN 
+      clients ON robots.clientId = clients.clientId
+    LEFT JOIN
+      models ON robots.modelId = models.modelId
+    LEFT JOIN
+      employees ON robots.employeeId = employees.employeeId
+    WHERE 
+      robots.companyId = ?`;
+
+  const queryParams: (string | number)[] = [companyId];
+
+  if (assigned !== undefined) {
+    query += " AND robots.assigned = ?";
+    queryParams.push(assigned === "true" ? 1 : 0);
+  }
+
+  const results = await execute<any[]>(query, queryParams);
+  return results.map((robot) => ({
+    robotId: robot.robotId,
+    serialNumber: robot.serialNumber,
+    name: robot.name,
+    battery: robot.battery,
+    mode: robot.mode,
+    activity: robot.activity,
+    state: robot.state,
+    errorCode: robot.errorCode,
+    errorCodeTimestamp: robot.errorCodeTimestamp,
+    assigned: robot.assigned,
+    model: {
+      modelId: robot.modelId,
+      name: robot.modelName,
+    },
+    client: robot.clientId
+      ? {
+          clientId: robot.clientId,
+          name: robot.clientName,
+          address: robot.clientAddress,
+          phoneNumber: robot.clientPhoneNumber,
+          companyId: robot.clientCompanyId,
+        }
+      : null,
+    employee: robot.employeeId
+      ? {
+          employeeId: robot.employeeId,
+          name: robot.employeeName,
+          surname1: robot.employeeSurname1,
+          surname2: robot.employeeSurname2,
+          username: robot.employeeUsername,
+          password: robot.employeePassword,
+          role: robot.employeeRole,
+          companyId: robot.employeeCompanyId,
+        }
+      : null,
+    companyId: robot.companyId,
+  }));
 };
 
 //Get robots by employee id

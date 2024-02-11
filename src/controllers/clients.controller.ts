@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { Client, validateClient } from "../models/clients.model";
 import * as clientsRepository from "../repositories/clients.repository";
 import { checkClientIsFromCompany, checkCompany } from "../helpers/security.helper";
+import * as clientsService from "../services/clients.service";
 
 //Get a client by id
 export const getClientById: RequestHandler = async (req, res, next) => {
@@ -68,10 +69,8 @@ export const updateClient: RequestHandler = async (req, res, next) => {
 export const deleteClient: RequestHandler = async (req, res, next) => {
   try {
     await checkClientIsFromCompany(req.params.id, req.companyId);
-    await clientsRepository.getById(req.params.id);
-    await clientsRepository.remove(req.params.id);
-    res.set("Content-Type", "text/plain");
-    res.status(200).send("Client with id " + req.params.id + " deleted successfully.");
+    await clientsService.deleteClient(req.params.id);
+    res.status(204);
   } catch (err) {
     next(err);
   }

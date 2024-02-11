@@ -2,6 +2,7 @@ import { generateUsername, reformatName } from "../helpers/username.helper";
 import { generatePassword } from "../helpers/password.helper";
 import { Employee, validateEmployee, Role } from "../models/employees.model";
 import * as employeesRepository from "../repositories/employees.repository";
+import * as robotRepository from "../repositories/robots.repository";
 import ValidationError from "../errors/validation.error";
 const bcrypt = require("bcryptjs");
 
@@ -28,5 +29,12 @@ export const createEmployeeForCompany = async (name: string, surname1: string, s
   const employee = await employeesRepository.create(newEmployee);
   employee.password = password;
 
+  return employee;
+};
+
+export const deleteEmployee = async (employeeId: string): Promise<Employee> => {
+  await robotRepository.unassignRobotForEmployee(employeeId);
+  const employee = await employeesRepository.getById(employeeId);
+  await employeesRepository.remove(employeeId);
   return employee;
 };

@@ -8,7 +8,7 @@ export const getRobotById: RequestHandler = async (req, res, next) => {
   const robotId = req.params.robotId;
   try {
     await checkRobotIsFromCompanyOrEmployee(robotId, req.companyId, req.userId, req.role);
-    const robot: Robot = await robotsRepository.getById(robotId);
+    const robot: RobotComplete = await robotsRepository.getById(robotId);
     res.status(200).send(robot);
   } catch (err) {
     next(err);
@@ -35,9 +35,18 @@ export const getRobotsByCompany: RequestHandler = async (req, res, next) => {
 export const getRobotsByEmployee: RequestHandler = async (req, res, next) => {
   const employeeId = req.params.employeeId;
   try {
-    await checkEmployee(employeeId, req.userId);
-    const robots: Robot[] = await robotsRepository.getByEmployee(employeeId);
-    res.status(200).send(robots);
+    const robots: RobotComplete[] = await robotsRepository.getByEmployee(employeeId);
+    res.status(200).json(robots);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getRobotsByClient: RequestHandler = async (req, res, next) => {
+  const clientId = req.params.clientId;
+  try {
+    const robots: RobotComplete[] = await robotsRepository.getByClient(clientId);
+    res.status(200).json(robots);
   } catch (err) {
     next(err);
   }
@@ -72,9 +81,9 @@ export const assignRobotToClient: RequestHandler = async (req, res, next) => {
 
   try {
     await checkRobotIsFromCompanyOrEmployee(robotId, req.companyId, req.userId, req.role);
-    await robotsRepository.assignRobot(robotId, clientId, employeeId, true);
-    res.set("Content-Type", "text/plain");
-    res.status(200).send(`Robot ${robotId} assigned to client ${clientId}`);
+    const robot: RobotComplete = await robotsRepository.assignRobot(robotId, clientId, employeeId, true);
+    console.log(`Robot ${robotId} assigned to client ${clientId}`);
+    res.status(200).json(robot);
   } catch (err) {
     next(err);
   }

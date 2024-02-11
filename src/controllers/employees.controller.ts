@@ -87,8 +87,8 @@ export const deleteEmployee: RequestHandler = async (req, res, next) => {
   try {
     await checkEmployeeIsFromCompany(req.params.id, req.companyId as string);
     await employeesRepository.getById(req.params.id);
-    await employeesRepository.remove(req.params.id);
-    res.sendStatus(204);
+    await employeesService.deleteEmployee(req.params.id);
+    res.status(204);
   } catch (err) {
     next(err);
   }
